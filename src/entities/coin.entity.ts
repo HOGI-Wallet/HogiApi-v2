@@ -1,0 +1,85 @@
+import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { AttachmentsEntity, AttachmentsSchema } from './attachment.entity';
+import {
+  FixedRateHistoryEntity,
+  FixedRateHistorySchema,
+} from './fixed-rate-history.entity';
+
+export type CoinDocument = CoinEntity &
+  Document & {
+    _id?: any;
+  };
+
+@Schema({ timestamps: true })
+export class CoinEntity {
+  _id?: any;
+
+  @Prop({ type: AttachmentsSchema })
+  icon?: AttachmentsEntity;
+
+  @Prop({ type: [FixedRateHistorySchema] })
+  fixedRateHistory?: FixedRateHistoryEntity[];
+
+  @Prop({ required: true, unique: true })
+  coinSymbol: string;
+
+  @Prop({ default: 0 })
+  orderIndex?: number;
+
+  @Prop()
+  coinColor: string;
+
+  @Prop({ required: true })
+  name: string;
+
+  @Prop()
+  blockchain: string; // e.g stellar, ethereum, bitcoin
+
+  @Prop()
+  networkFeeMin: number;
+
+  @Prop()
+  networkFeeMax: number;
+
+  @Prop()
+  networkFeeAverage: number;
+
+  @Prop()
+  masterWallet: string;
+
+  @Prop({ Type: Boolean, default: false })
+  isErc20?: boolean;
+
+  @Prop()
+  contractAddress?: string;
+
+  @Prop({ type: Object })
+  contractAbi?: any;
+
+  @Prop({ type: Boolean, default: true })
+  isActive?: boolean;
+
+  @Prop()
+  decimal: number;
+
+  @Prop()
+  coingeckoId: string;
+
+  @Prop({ default: 0 })
+  fixedRate?: number;
+
+  @Prop({ default: false })
+  isFixedRate: boolean;
+
+  @Prop()
+  feeReceivingAccount: string;
+
+  @Prop()
+  processingFee: string; // processing fee of coin that will be given to company
+
+  @Prop()
+  description?: string;
+}
+
+export const CoinSchema = SchemaFactory.createForClass(CoinEntity);

@@ -1,0 +1,41 @@
+version: 0.2
+env:
+  variables:
+    NODE_ENV: "production"
+    PORT: "4000"
+    JWT_SECRET: "kdfjhsdgsjfioeu ifueriuiefksdbfse df kdk"
+    MONGO_URI: ""
+    BLOCKCYPHER_URL: "https://api.blockcypher.com"
+    BLOCKCYPHER_API_VERSION: "v1"
+    BLOCKCYPHER_API_ENV: "main"
+    BLOCKCYPHER_API_TOKEN: "237297d1063a4892b8da0d49abd616c5"
+    INFURA_NETWORK: "https://rinkeby.infura.io/v3/eadc24d23a634c5e9a288a1b3c99682d"
+    INFURA_WS: "wss://rinkeby.infura.io/ws/v3/eadc24d23a634c5e9a288a1b3c99682d"
+    chain: "rinkeby"
+    chainID: "4"
+    ETHERSCAN_EXPLORER_URL: "https://rinkeby.etherscan.io/"
+    ETHERSCAN_API_URL: "https://api-rinkeby.etherscan.io"
+    ETHERSCAN_API_KEY: "GIX8SDXWGSK2Q3JFXBQIIZIT3TKIXKHGMH"
+    WEBHOOK_CALL_BACK_BASE_URL: "https://blockmerchants.com"
+    ROOT_UPLOAD_DIR: "coinIcons"
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - npm install --global yarn
+      - npm install -g @nestjs/cli
+      - yarn install
+  build:
+    commands:
+      - yarn build
+  post_build:
+    commands:
+      - cp -R node_modules/ dist/node_modules
+      - cp Procfile dist/Procfile
+      - cp rds-combined-ca-bundle.pem dist/rds-combined-ca-bundle.pem
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: no
+  base-directory: dist
