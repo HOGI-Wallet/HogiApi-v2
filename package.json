@@ -35,7 +35,7 @@
     "@nestjs/websockets": "^7.6.12",
     "@types/web3": "^1.2.2",
     "abi-decoder": "^2.4.0",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "bip39": "^3.0.3",
     "bip44-constants": "^8.0.92",
     "bitcoinjs-lib": "^5.2.0",
