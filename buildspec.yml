@@ -33,7 +33,7 @@ phases:
     commands:
       - cp -R node_modules/ dist/node_modules
       - cp Procfile dist/Procfile
-      - cp .ebextensions dist/.ebextensions
+      - cp -R .ebextensions dist/.ebextensions
       - cp rds-combined-ca-bundle.pem dist/rds-combined-ca-bundle.pem
 artifacts:
   files:
