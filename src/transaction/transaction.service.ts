@@ -12,7 +12,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Mode } from 'fs';
 import { Model } from 'mongoose';
 import { SendTransactionDto } from './dto/send-transaction.dto';
-import { tsconfigPathsBeforeHookFactory } from '@nestjs/cli/lib/compiler/hooks/tsconfig-paths.hook';
 import { WalletHelper } from '../wallet/helpers/wallet.helper';
 import { TransactionRepo } from './transaction.repo';
 import { TransactionHelper } from './helpers/transaction.helper';

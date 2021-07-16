@@ -44,6 +44,7 @@
     "class-validator": "^0.13.1",
     "coingecko-api": "^1.0.10",
     "coininfo": "^5.1.0",
+    "decimal.js": "^10.3.1",
     "delay": "^5.0.0",
     "dotenv": "^8.2.0",
     "ed25519-hd-key": "^1.1.2",
