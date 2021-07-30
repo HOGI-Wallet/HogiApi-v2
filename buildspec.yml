@@ -4,7 +4,7 @@ env:
     NODE_ENV: "production"
     PORT: "4000"
     JWT_SECRET: "kdfjhsdgsjfioeu ifueriuiefksdbfse df kdk"
-    MONGO_URI: "mongodb://blockmerchants:krypto123!@docdb-blockmerchants.cluster-ctbnrifenwoi.us-east-2.docdb.amazonaws.com:27017/blockmerchants?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
+    MONGO_URI: "mongodb://blockmerchants:krypto123!@docdb-blockmerchants.cluster-ctbnrifenwoi.us-east-2.docdb.amazonaws.com:27017/blockmerchants?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
     BLOCKCYPHER_URL: "https://api.blockcypher.com"
     BLOCKCYPHER_API_VERSION: "v1"
     BLOCKCYPHER_API_ENV: "main"
@@ -34,7 +34,6 @@ phases:
       - cp -R node_modules/ dist/node_modules
       - cp Procfile dist/Procfile
       - cp -R .ebextensions dist/.ebextensions
-      - cp rds-combined-ca-bundle.pem dist/rds-combined-ca-bundle.pem
 artifacts:
   files:
     - "**/*"
