@@ -9,7 +9,9 @@ import {
 import { Model } from 'mongoose';
 import { TransactionHelper } from '../transaction/helpers/transaction.helper';
 import { BlockcypherService } from '../blockcypher/blockcypher.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Webhooks')
 @Controller('webhooks')
 export class WebhooksController {
   constructor(

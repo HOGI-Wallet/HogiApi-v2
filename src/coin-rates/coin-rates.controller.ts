@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CoinRatesService } from './coin-rates.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Coin Rates')
 @Controller('coin-rates')
 export class CoinRatesController {
   constructor(private readonly coinRatesService: CoinRatesService) {}

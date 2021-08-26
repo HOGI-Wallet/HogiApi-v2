@@ -16,6 +16,9 @@ import { CreatePublicinfoDto } from './dto/create-publicinfo.dto';
 import { WalletService } from './wallet.service';
 import { WalletInterface } from './types/wallet.interface';
 import * as bip39 from 'bip39';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Wallet')
 @Controller('wallet')
 export class WalletController {
   constructor(

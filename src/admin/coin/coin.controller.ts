@@ -26,8 +26,10 @@ import { validate } from 'class-validator';
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import path from 'path';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('admin/coin')
+ApiTags('Admin/Coin');
+@Controller('/admin/coin')
 export class CoinController {
   constructor(private readonly coinService: CoinService) {}
 

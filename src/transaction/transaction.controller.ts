@@ -19,7 +19,9 @@ import { SubmitTransactionValidationPipe } from '../globals/submit-transaction.v
 import { MonitorTransactionDto } from './dto/monitor-transaction.dto';
 import { InfuraService } from '../infura/infura.service';
 import { TransactionHelper } from './helpers/transaction.helper';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Transactions')
 @Controller('transaction')
 export class TransactionController {
   constructor(

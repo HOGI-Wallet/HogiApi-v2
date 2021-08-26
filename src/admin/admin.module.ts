@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { AdminController } from './admin.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
@@ -25,18 +23,7 @@ import { CoinRatesModule } from '../coin-rates/coin-rates.module';
       inject: [ConfigService],
     }),
   ],
-  controllers: [
-    AdminController,
-    AuthController,
-    CoinController,
-    WalletController,
-  ],
-  providers: [
-    AdminService,
-    AuthService,
-    CoinService,
-    WalletService,
-    WalletHelper,
-  ],
+  controllers: [AuthController, CoinController, WalletController],
+  providers: [AuthService, CoinService, WalletService, WalletHelper],
 })
 export class AdminModule {}
