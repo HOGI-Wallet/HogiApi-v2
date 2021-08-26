@@ -16,7 +16,7 @@ import { CreatePublicinfoDto } from './dto/create-publicinfo.dto';
 import { WalletService } from './wallet.service';
 import { WalletInterface } from './types/wallet.interface';
 import * as bip39 from 'bip39';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -87,7 +87,8 @@ export class WalletController {
   async addPublicInfoInDb(@Body() body: CreatePublicinfoDto) {
     return this.walletCore.addPublicInfo(body);
   }
-
+  @ApiParam({ name: 'address' })
+  @ApiParam({ name: 'coinSymbol' })
   @Get('balance/:coinSymbol/:address')
   async getMyWalletBalance(@Param() param, @Query() query) {
     return this.walletService.getMyWalletBalance(

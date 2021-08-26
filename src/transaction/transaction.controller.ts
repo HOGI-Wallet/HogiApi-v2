@@ -19,7 +19,7 @@ import { SubmitTransactionValidationPipe } from '../globals/submit-transaction.v
 import { MonitorTransactionDto } from './dto/monitor-transaction.dto';
 import { InfuraService } from '../infura/infura.service';
 import { TransactionHelper } from './helpers/transaction.helper';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiParam } from '@nestjs/swagger';
 
 @ApiTags('Transactions')
 @Controller('transaction')
@@ -31,6 +31,7 @@ export class TransactionController {
     private readonly transactionHelper: TransactionHelper,
   ) {}
 
+  @ApiParam({ name: 'coinSymbol' })
   @Post('/:coinSymbol/send')
   createSendTx(
     @Body() createTransactionDto: CreateTransactionDto,
@@ -43,11 +44,14 @@ export class TransactionController {
   }
 
   // @UsePipes(SubmitTransactionValidationPipe)
+  @ApiParam({ name: 'coinSymbol' })
   @Post('/:coinSymbol/submit')
   async sendTx(@Body() body: SendTransactionDto, @Param() param, @Req() req) {
     return this.transactionService.sendTx(param.coinSymbol, body);
   }
 
+  @ApiParam({ name: 'address' })
+  @ApiParam({ name: 'coinSymbol' })
   @Get('/:address/:coinSymbol/txs')
   async getTransactionsOfAddress(@Param() param, @Query() query) {
     const txs = await this.transactionRepo.getTx(

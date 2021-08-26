@@ -9,7 +9,7 @@ import {
 import { Model } from 'mongoose';
 import { TransactionHelper } from '../transaction/helpers/transaction.helper';
 import { BlockcypherService } from '../blockcypher/blockcypher.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Webhooks')
 @Controller('webhooks')
@@ -21,6 +21,8 @@ export class WebhooksController {
     private readonly transactionHelper: TransactionHelper,
     private readonly blockypherService: BlockcypherService,
   ) {}
+  @ApiParam({ name: 'address' })
+  @ApiParam({ name: 'coinSymbol' })
   @Post('blockCypher/hooks/callback/:coinSymbol/:address')
   async receiveBChooks(@Body() body, @Param() param) {
     /** create tx in db

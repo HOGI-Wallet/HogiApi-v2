@@ -3,7 +3,9 @@ import { WalletService } from './wallet.service';
 import { GetWalletsQueryDto } from './dto/get-wallets.query.dto';
 import { AdminAuthGuard } from '../auth/guards/admin.guard';
 import { DailyWalletGenerationCountDto } from './dto/daily-wallet-generation-count.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Admin/Wallet')
 @Controller('admin/wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}

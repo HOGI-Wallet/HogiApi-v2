@@ -26,9 +26,9 @@ import { validate } from 'class-validator';
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import path from 'path';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
-ApiTags('Admin/Coin');
+@ApiTags('Admin/Coin')
 @Controller('/admin/coin')
 export class CoinController {
   constructor(private readonly coinService: CoinService) {}
@@ -92,6 +92,7 @@ export class CoinController {
     return await this.coinService.createAttachment(data.files, body);
   }
 
+  @ApiParam({ name: 'coinSymbol' })
   @Get(':coinSymbol')
   async getAsFile(@Param() param, @Response() res) {
     try {
