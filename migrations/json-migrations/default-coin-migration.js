@@ -11,7 +11,7 @@ module.exports = [
     contractAddress: null,
     contractAbi: null,
     coingeckoId: 'bitcoin',
-    description: 'The first decentralized realization of digital currency',
+    description: 'The first decentralized realization of digital currency.',
   },
   {
     coinSymbol: 'ltc',
