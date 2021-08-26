@@ -16,7 +16,7 @@ env:
     ETHERSCAN_EXPLORER_URL: "https://rinkeby.etherscan.io/"
     ETHERSCAN_API_URL: "https://api-rinkeby.etherscan.io"
     ETHERSCAN_API_KEY: "ZCH6YA5W4ATNH7DFFIRQ34AGDJ92JJQQAM"
-    WEBHOOK_CALL_BACK_BASE_URL: "https://blockmerchants.com"
+    WEBHOOK_CALL_BACK_BASE_URL: "https://api.blockmerchants.com"
     ROOT_UPLOAD_DIR: "coinIcons"
 phases:
   install:
