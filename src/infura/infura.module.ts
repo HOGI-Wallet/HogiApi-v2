@@ -13,6 +13,7 @@ import { WebhooksModule } from '../webhooks/webhooks.module';
     forwardRef(() => WalletModule),
     forwardRef(() => WebhooksModule),
   ],
+
   providers: [
     InfuraService,
     {
