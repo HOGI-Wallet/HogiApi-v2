@@ -216,7 +216,7 @@ export class BscScanService {
     else return [];
   }
 
-  async getEthTransactionByHash(txHash: string) {
+  async getBnbTransactionByHash(txHash: string) {
     const url =
       this.config.bscScanApiUrl +
       '/api?module=proxy&action=eth_getTransactionByHash&txhash=' +

@@ -19,6 +19,7 @@ import { InfuraService } from '../infura/infura.service';
 import { Transaction as EthereumTx } from 'ethereumjs-tx';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { EtherScanService } from './ether-scan.service';
+import { BscScanService } from './bscscan.service';
 
 @Injectable()
 export class TransactionService {
@@ -31,6 +32,7 @@ export class TransactionService {
     @InjectModel(CoinEntity.name)
     private readonly coinModel: Model<CoinDocument>,
     private readonly etherScanService: EtherScanService,
+    private readonly bscScanService: BscScanService,
   ) {}
 
   async createTx(coinSymbol: string, tx: CreateTransactionDto) {
@@ -84,13 +86,11 @@ export class TransactionService {
           this.transactionHelper.transformBCTx(coinSymbol, tx.tx),
         );
         return tx;
-      } else if (
-        cointype === 'isEth' ||
-        cointype === 'isERC20' ||
-        cointype === 'isBnb' ||
-        cointype === 'isBNB20'
-      ) {
+      } else if (cointype === 'isEth' || cointype === 'isERC20') {
         return this.infuraService.submitTx(data.serializedTX);
+      } else if (cointype === 'isBnb' || cointype === 'isBNB20') {
+        // TODO: Integrate some platform to listen transactions on Binance Chain
+        console.log('Submit Transaction For Listening Here');
       }
     } catch (e) {
       throw new UnprocessableEntityException({ message: e.message });
@@ -120,6 +120,16 @@ export class TransactionService {
         const _tx = { ...tx, to: toAddress, value: amount };
         const dbTxPayload = await this.etherScanService.transformTxs(
           [_tx],
+          '',
+          coin,
+        );
+        const dbTx = await this.transactionRepo.createTx(dbTxPayload);
+        return dbTx;
+      }
+      case 'isBnb': {
+        const tx = await this.bscScanService.getBnbTransactionByHash(txHash);
+        const dbTxPayload = await this.bscScanService.transformTxs(
+          [tx],
           '',
           coin,
         );
