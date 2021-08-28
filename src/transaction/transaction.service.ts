@@ -84,7 +84,12 @@ export class TransactionService {
           this.transactionHelper.transformBCTx(coinSymbol, tx.tx),
         );
         return tx;
-      } else if (cointype === 'isEth' || cointype === 'isERC20') {
+      } else if (
+        cointype === 'isEth' ||
+        cointype === 'isERC20' ||
+        cointype === 'isBnb' ||
+        cointype === 'isBNB20'
+      ) {
         return this.infuraService.submitTx(data.serializedTX);
       }
     } catch (e) {
