@@ -14,6 +14,9 @@ import { WebhooksModule } from '../webhooks/webhooks.module';
 import { Web3TransactionsMonitor } from './crons/web3-transactions-monitor';
 import { SyncEthTransactions } from './crons/sync-eth-transactions';
 import { EtherScanService } from './ether-scan.service';
+import { SyncBnbTransactions } from './crons/sync-bnb-transactions';
+import { BscScanService } from './bscscan.service';
+import { Web3BnbTransactionsMonitor } from './crons/web3-bnb-transactions-monitor';
 
 @Module({
   imports: [
@@ -31,8 +34,11 @@ import { EtherScanService } from './ether-scan.service';
     SubmitTransactionValidationPipe,
     BlockcypherTransactionMonitor,
     Web3TransactionsMonitor,
+    Web3BnbTransactionsMonitor,
     SyncEthTransactions,
+    SyncBnbTransactions,
     EtherScanService,
+    BscScanService,
     {
       provide: 'Web3',
       useFactory: (config: ConfigService) => {

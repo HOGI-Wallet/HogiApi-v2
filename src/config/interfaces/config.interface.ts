@@ -16,5 +16,9 @@ export interface ConfigInterface {
   ETHERSCAN_API_URL: string;
   ETHERSCAN_API_KEY: string;
 
+  BSCSCAN_EXPLORER_URL: string;
+  BSCSCAN_API_URL: string;
+  BSCSCAN_API_KEY: string;
+
   WEBHOOK_CALL_BACK_BASE_URL: string;
 }

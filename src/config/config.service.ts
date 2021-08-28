@@ -44,6 +44,10 @@ export class ConfigService {
       ETHERSCAN_API_URL: Joi.string().required(),
       ETHERSCAN_API_KEY: Joi.string().required(),
 
+      BSCSCAN_EXPLORER_URL: Joi.string().required(),
+      BSCSCAN_API_URL: Joi.string().required(),
+      BSCSCAN_API_KEY: Joi.string().required(),
+
       WEBHOOK_CALL_BACK_BASE_URL: Joi.string().required(),
     });
 
@@ -108,6 +112,18 @@ export class ConfigService {
 
   get etherScanExplorerUrl(): string {
     return this.envConfig.ETHERSCAN_EXPLORER_URL;
+  }
+
+  get bscScanApiUrl(): string {
+    return this.envConfig.BSCSCAN_API_URL;
+  }
+
+  get bscScanApiKey(): string {
+    return this.envConfig.BSCSCAN_API_KEY;
+  }
+
+  get bscScanExplorerUrl(): string {
+    return this.envConfig.BSCSCAN_EXPLORER_URL;
   }
 
   get webhookCallbackBaseUrl(): string {

@@ -11,6 +11,7 @@ import { BlockcypherService } from '../blockcypher/blockcypher.service';
 import { TransactionModule } from '../transaction/transaction.module';
 import { EtherScanService } from '../transaction/ether-scan.service';
 import { ConfigModule } from '../config/config.module';
+import { BscScanService } from '../transaction/bscscan.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '../config/config.module';
     WalletHelper,
     WalletService,
     EtherScanService,
+    BscScanService,
     {
       provide: 'Web3',
       useFactory: (config: ConfigService) => {

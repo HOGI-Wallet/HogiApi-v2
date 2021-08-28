@@ -34,6 +34,9 @@ export class WalletController {
     if (coin.isErc20) {
       symbol = 'eth';
     }
+    if (coin.isBep20) {
+      symbol = 'bnb';
+    }
     if (!body.recovery) {
       try {
         const wallet: WalletInterface = await WalletCore.createHdWallet(
@@ -48,7 +51,7 @@ export class WalletController {
           address: wallet.address,
         });
 
-        return { ...wallet, isErc20: coin?.isErc20 };
+        return { ...wallet, isErc20: coin?.isErc20, isBep20: coin?.isBep20 };
       } catch (e) {
         throw new UnprocessableEntityException(e.message);
       }
@@ -67,7 +70,7 @@ export class WalletController {
           address: wallet.address,
         });
 
-        return { ...wallet, isErc20: coin?.isErc20 };
+        return { ...wallet, isErc20: coin?.isErc20, isBep20: coin?.isBep20 };
       } catch (e) {
         throw new UnprocessableEntityException(e.message);
       }

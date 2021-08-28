@@ -26,6 +26,9 @@ export class WalletEntity {
   @Prop()
   isERC20: boolean;
 
+  @Prop()
+  isBEP20: boolean;
+
   @Prop({ default: true })
   isActive?: boolean; // if user enabled this, we will show that coin in wallets active list
 

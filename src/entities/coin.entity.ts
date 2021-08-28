@@ -51,6 +51,9 @@ export class CoinEntity {
   @Prop({ Type: Boolean, default: false })
   isErc20?: boolean;
 
+  @Prop({ Type: Boolean, default: false })
+  isBep20?: boolean;
+
   @Prop()
   contractAddress?: string;
 

@@ -11,6 +11,7 @@ import { BlockExplorerUtils } from '../../globals/utils/blockExplorerUtils';
 import coininfo from 'coininfo';
 import { ConfigService } from '../../config/config.service';
 import { EtherScanService } from '../../transaction/ether-scan.service';
+import { BscScanService } from '../../transaction/bscscan.service';
 
 @Injectable()
 export class WalletHelper {
@@ -26,6 +27,7 @@ export class WalletHelper {
     private readonly web3: Web3,
     private readonly config: ConfigService,
     private readonly etherScanService: EtherScanService,
+    private readonly bscScanService: BscScanService,
   ) {}
 
   /**
@@ -41,7 +43,10 @@ export class WalletHelper {
   ) {
     if (coinType === 'isEth') {
       /** get balance from etherscan*/
-      return this.getTxCountOfAddress(address);
+      return this.getTxCountOfAddressOnEtherScan(address);
+    } else if (coinType === 'isBnb') {
+      /** get balance from bscscan*/
+      return this.getTxCountOfAddressOnBscScan(address);
     } else if (coinType === 'btcLike') {
       /** ge balance from blockcypher*/
       return this.blockcypherService.getTxCountOfAddress(address, coinSymbol);
@@ -62,6 +67,26 @@ export class WalletHelper {
             address +
             '&tag=latest&apikey=' +
             this.config.etherScanApiKey,
+        )
+        .toPromise();
+      return res.data.result;
+    } catch (e) {
+      throw new Error("couldn't get ether balance");
+    }
+  }
+
+  async checkBnbBalance(address): Promise<string> {
+    this.http.axiosRef.defaults.headers.common['Content-Type'] =
+      'application/json';
+    try {
+      const res = await this.http
+        .get(
+          this.config.bscScanApiUrl +
+            '/api?module=account&action=balance' +
+            '&address=' +
+            address +
+            '&tag=latest&apikey=' +
+            this.config.bscScanApiKey,
         )
         .toPromise();
       return res.data.result;
@@ -91,7 +116,28 @@ export class WalletHelper {
     }
   }
 
-  async getTxCountOfAddress(address: string) {
+  async getBep20TokenBalance(contractaddress: string, address: string) {
+    this.http.axiosRef.defaults.headers.common['Content-Type'] =
+      'application/json';
+    try {
+      const res = await this.http
+        .get(
+          this.config.bscScanApiUrl +
+            '/api?module=account&action=tokenbalance&contractaddress=' +
+            contractaddress +
+            '&address=' +
+            address +
+            '&tag=latest&apikey=' +
+            this.config.bscScanApiKey,
+        )
+        .toPromise();
+      return res.data.result;
+    } catch (e) {
+      throw new Error("couldn't get erc20 balance");
+    }
+  }
+
+  async getTxCountOfAddressOnEtherScan(address: string) {
     try {
       const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=asc&apikey=${process.env.ETHERSCAN_API_KEY}`;
       const res = await this.http.get(url).toPromise();
@@ -100,6 +146,18 @@ export class WalletHelper {
       }
     } catch (e) {
       throw new Error("couldn't get erc20 balance");
+    }
+  }
+
+  async getTxCountOfAddressOnBscScan(address: string) {
+    try {
+      const url = `https://api.bscscan.com/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=asc&apikey=${process.env.BSCSCAN_API_KEY}`;
+      const res = await this.http.get(url).toPromise();
+      if (res.data) {
+        return res.data.status === '0' ? false : true;
+      }
+    } catch (e) {
+      throw new Error("couldn't get bep20 balance");
     }
   }
 
@@ -118,7 +176,9 @@ export class WalletHelper {
     let coinType;
     if (coin.coinSymbol == 'xlm') coinType = 'xlm';
     else if (coin.coinSymbol === 'eth') coinType = 'isEth';
+    else if (coin.coinSymbol === 'bnb') coinType = 'isBnb';
     else if (coin.isErc20) coinType = 'isERC20';
+    else if (coin.isBep20) coinType = 'isBEP20';
     else coinType = 'btcLike';
     return coinType;
   }
@@ -178,6 +238,48 @@ export class WalletHelper {
     }
   }
 
+  async updateBnbLikeWalletsBalance(address: string, coinSymbol: string) {
+    try {
+      // get balance from infura
+      if (coinSymbol === 'bnb') {
+        const balance = await this.web3.eth.getBalance(address);
+        await this.walletModel.updateAddressBalance(
+          this.web3.utils.toChecksumAddress(address.toLowerCase()),
+          this.web3.utils.fromWei(balance, 'ether'),
+          coinSymbol,
+        );
+      } else {
+        await this.updateBEP20WalletsBalance(coinSymbol, address);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async updateBEP20WalletsBalance(coinSymbol: string, address: string) {
+    try {
+      const coin: CoinEntity = await this.coinModel.findOne({
+        coinSymbol: new RegExp('^' + coinSymbol + '$', 'i'),
+      });
+      const contract = new this.web3.eth.Contract(
+        coin.contractAbi,
+        coin.contractAddress,
+      );
+      const balance = await this.bscScanService.getBEP20Balance(
+        address,
+        coin.contractAddress,
+      );
+
+      await this.walletModel.updateCoinBalance(
+        this.web3.utils.toChecksumAddress(address.toLowerCase()),
+        `${balance / Math.pow(10, coin.decimal ?? 18)}`,
+        coinSymbol,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async balanceInOtherCurrency(
     coinSymbol: string,
     coinRate: number,
@@ -185,7 +287,12 @@ export class WalletHelper {
   ) {
     const coinType = await this.getCoinType(coinSymbol);
     let _balance;
-    if (coinType === 'isEth' || coinType === 'isERC20')
+    if (
+      coinType === 'isEth' ||
+      coinType === 'isERC20' ||
+      coinType === 'isBnb' ||
+      coinType === 'isBEP20'
+    )
       _balance = parseFloat(balance);
     else if (coinType === 'btcLike')
       _balance = parseFloat(balance) / Math.pow(10, 8);
@@ -209,6 +316,17 @@ export class WalletHelper {
           address,
         );
         return this.web3.utils.fromWei(erc20Balance, 'ether').toString();
+      } else if (coinType === 'isBnb') {
+        console.log('checking bnb balance on bscscan');
+        const bnbBalance = await this.checkBnbBalance(address);
+        return this.web3.utils.fromWei(bnbBalance, 'ether').toString();
+      } else if (coinType === 'isBEP20') {
+        console.log('checking bep20 balance on bscscan');
+        const bep20Balance = await this.getBep20TokenBalance(
+          coin.contractAddress,
+          address,
+        );
+        return this.web3.utils.fromWei(bep20Balance, 'ether').toString();
       } else {
         const altcoinBalance = await this.blockcypherService.getBalance(
           coin.coinSymbol,

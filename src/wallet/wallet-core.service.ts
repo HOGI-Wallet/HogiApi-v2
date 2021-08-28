@@ -23,6 +23,7 @@ import { CreatePublicinfoDto } from './dto/create-publicinfo.dto';
 import { WalletDocument, WalletEntity } from '../entities/wallet.entity';
 import { EtherScanService } from '../transaction/ether-scan.service';
 import { address } from 'bitcoinjs-lib';
+import { BscScanService } from '../transaction/bscscan.service';
 
 /**
  * this service is responsible for creating HD wallets
@@ -50,6 +51,7 @@ export class WalletCore {
     private readonly blockcypherService: BlockcypherService,
     private readonly walletHelper: WalletHelper,
     private readonly etherScanService: EtherScanService,
+    private readonly bscScanService: BscScanService,
   ) {}
   static hdPath(symbol: string, account_index = 0): string {
     const coinType = bip44Constants.findIndex(
@@ -281,6 +283,9 @@ export class WalletCore {
     if (coin.isErc20) {
       coin.coinSymbol = 'eth';
     }
+    if (coin.isBep20) {
+      coin.coinSymbol = 'bnb';
+    }
     if (iteration <= 0) return validAddress;
 
     const newAddress = await this.createAddress(coin, accountIndex, mnemonic);
@@ -312,6 +317,9 @@ export class WalletCore {
     if (coin.isErc20) {
       coin.coinSymbol = 'eth';
     }
+    if (coin.isBep20) {
+      coin.coinSymbol = 'bnb';
+    }
     return WalletCore.createHdWallet(coin.coinSymbol, mnemonic);
   }
 
@@ -325,6 +333,8 @@ export class WalletCore {
     if (coinType === 'isEth' || coinType === 'isERC20') {
       const txs = await this.etherScanService.getEthereumTxs(address);
       return txs?.length > 0 ? true : false;
+    } else if (coinType === 'isBnb' || coinType === 'isBEP20') {
+      const txs = await this.bscScanService.getBnbTxs(address);
     } else {
       const txs = await this.blockcypherService.getTxCountOfAddress(
         address,

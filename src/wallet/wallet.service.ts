@@ -68,6 +68,7 @@ export class WalletService {
         {
           ...data,
           isERC20: coin.isErc20,
+          isBEP20: coin.isBep20,
           coinId: coin._id.toString(),
           balance: await this.walletHelper.getBalance(data.address, coin),
           // lastTxUpdate in now() - 6 mins, so that synx tx cron job process that wallet early
