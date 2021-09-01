@@ -30,7 +30,9 @@ export class SyncBnbTransactions {
     private readonly web3: Web3,
     private readonly socket: SocketsService,
     private readonly bscScanService: BscScanService,
-  ) {}
+  ) {
+    // this.syncBnbAddressAndTxs();
+  }
 
   /**
    * get all eth and erc20 addresses
@@ -52,7 +54,7 @@ export class SyncBnbTransactions {
   }
 
   /**
-   * syncAddresses this method is used to sync all ether base wallets with its blockchain using etherscan api via cron job
+   * syncAddresses this method is used to sync all binance base wallets with its blockchain using bscscan api via cron job
    */
   @Cron(CronExpression.EVERY_MINUTE)
   async syncBnbAddressAndTxs() {

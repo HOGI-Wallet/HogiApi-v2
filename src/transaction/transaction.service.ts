@@ -136,6 +136,21 @@ export class TransactionService {
         const dbTx = await this.transactionRepo.createTx(dbTxPayload);
         return dbTx;
       }
+      case 'isBEP20': {
+        const tx = await this.bscScanService.getBnbTransactionByHash(txHash);
+        const {
+          toAddress,
+          amount,
+        } = await this.transactionHelper.decodeBEP20Transfer(tx);
+        const _tx = { ...tx, to: toAddress, value: amount };
+        const dbTxPayload = await this.bscScanService.transformTxs(
+          [_tx],
+          '',
+          coin,
+        );
+        const dbTx = await this.transactionRepo.createTx(dbTxPayload);
+        return dbTx;
+      }
       case 'btcLike': {
         const tx = await this.blockcypherService.getTxDetails(
           coin.coinSymbol,

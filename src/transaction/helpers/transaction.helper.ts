@@ -192,4 +192,24 @@ export class TransactionHelper {
     }
     return { toAddress, amount, coin: coin ?? null };
   }
+  async decodeBEP20Transfer(tx) {
+    const coin: CoinEntity = await this.coinModel.findOne({
+      contractAddress: new RegExp(`^${tx.to}$`, 'i'),
+    });
+    let toAddress = tx.to?.toLowerCase();
+    let amount = this.web3.utils.fromWei(tx.value, 'ether');
+
+    if (coin?.isBep20) {
+      abiDecoder.addABI(coin.contractAbi);
+      const decodedData = abiDecoder.decodeMethod(tx.input);
+      /** get decoded params */
+      if (decodedData.name === 'transfer') {
+        const params = decodedData.params;
+        toAddress = params.find((p) => p.name === 'recipient')?.value;
+        amount = params.find((p) => p.name === 'amount')?.value;
+        // amount = this.web3.utils.fromWei(amount, 'ether');
+      }
+    }
+    return { toAddress, amount, coin: coin ?? null };
+  }
 }
