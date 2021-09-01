@@ -19,8 +19,11 @@ env:
     BSCSCAN_EXPLORER_URL: "https://testnet.bscscan.com/"
     BSCSCAN_API_URL: "https://api-testnet.bscscan.com"
     BSCSCAN_API_KEY: "T358T5VSPR96BDMAU28E17KQV79NDX1QK1"
-    WEBHOOK_CALL_BACK_BASE_URL: "https://api.blockmerchants.com"
+    WEBHOOK_CALL_BACK_BASE_URL: "https://api.cryptokara.com"
     ROOT_UPLOAD_DIR: "coinIcons"
+    AWS_ACCESS_KEY": "AKIAQY6I37UBGL3LWAFR"
+    AWS_SECRET_KEY": "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"
+    AWS_BUCKET: "blockmerchantstorage"
 phases:
   install:
     runtime-versions:

@@ -30,7 +30,7 @@ async function bootstrap() {
    */
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Multichain Wallet APIs')
+    .setTitle('CryptoKara - API Docs')
     .setDescription(
       'Swagger apis for managing wallets on different blockchains.',
     )
