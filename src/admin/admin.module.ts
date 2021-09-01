@@ -10,6 +10,9 @@ import { CoinService } from './coin/coin.service';
 import { WalletService } from './wallet/wallet.service';
 import { WalletHelper } from './wallet/helpers/wallet.helper';
 import { CoinRatesModule } from '../coin-rates/coin-rates.module';
+import { NewsController } from './news/news.controller';
+import { NewsService } from './news/news.service';
+import { S3Service } from './news/s3.service';
 
 @Module({
   imports: [
@@ -23,7 +26,19 @@ import { CoinRatesModule } from '../coin-rates/coin-rates.module';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController, CoinController, WalletController],
-  providers: [AuthService, CoinService, WalletService, WalletHelper],
+  controllers: [
+    AuthController,
+    CoinController,
+    WalletController,
+    NewsController,
+  ],
+  providers: [
+    AuthService,
+    CoinService,
+    WalletService,
+    WalletHelper,
+    NewsService,
+    S3Service,
+  ],
 })
 export class AdminModule {}

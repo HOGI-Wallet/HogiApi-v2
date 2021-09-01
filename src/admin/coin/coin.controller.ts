@@ -46,51 +46,51 @@ export class CoinController {
     return this.coinService.createCoin(body);
   }
 
-  @Post('/upload')
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'file', maxCount: 1 }], {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          const rootDir = `./${process.env.ROOT_UPLOAD_DIR}`;
-          fs.access(rootDir, function (err) {
-            if (err) {
-              fs.mkdir(rootDir, (err) => {
-                cb(err, rootDir);
-              });
-            } else {
-              return cb(null, rootDir);
-            }
-          });
-        },
-        filename: (req, file, cb) => {
-          console.log(file);
-          // let fileName = file.originalname;
-          let fileName = file.originalname.split('.');
-          fileName = `${fileName[0]}--${file.fieldname}--${Date.now()}.${
-            fileName[1]
-          }`;
-          console.log(fileName);
-          return cb(null, fileName);
-        },
-      }),
-    }),
-  )
-  async upload(
-    @UploadedFiles() files,
-    @Req() req,
-    @Body() body: UploadBodyDto,
-  ) {
-    const data = new FilesDto(files);
-    const errors = await validate(data);
-    if (errors && errors.length) {
-      throw new BadRequestException({
-        statusCode: HttpStatus.BAD_REQUEST,
-        error: errors,
-        message: errors,
-      });
-    }
-    return await this.coinService.createAttachment(data.files, body);
-  }
+  // @Post('/upload')
+  // @UseInterceptors(
+  //   FileFieldsInterceptor([{ name: 'file', maxCount: 1 }], {
+  //     storage: diskStorage({
+  //       destination: (req, file, cb) => {
+  //         const rootDir = `./${process.env.ROOT_UPLOAD_DIR}`;
+  //         fs.access(rootDir, function (err) {
+  //           if (err) {
+  //             fs.mkdir(rootDir, (err) => {
+  //               cb(err, rootDir);
+  //             });
+  //           } else {
+  //             return cb(null, rootDir);
+  //           }
+  //         });
+  //       },
+  //       filename: (req, file, cb) => {
+  //         console.log(file);
+  //         // let fileName = file.originalname;
+  //         let fileName = file.originalname.split('.');
+  //         fileName = `${fileName[0]}--${file.fieldname}--${Date.now()}.${
+  //           fileName[1]
+  //         }`;
+  //         console.log(fileName);
+  //         return cb(null, fileName);
+  //       },
+  //     }),
+  //   }),
+  // )
+  // async upload(
+  //   @UploadedFiles() files,
+  //   @Req() req,
+  //   @Body() body: UploadBodyDto,
+  // ) {
+  //   const data = new FilesDto(files);
+  //   const errors = await validate(data);
+  //   if (errors && errors.length) {
+  //     throw new BadRequestException({
+  //       statusCode: HttpStatus.BAD_REQUEST,
+  //       error: errors,
+  //       message: errors,
+  //     });
+  //   }
+  //   return await this.coinService.createAttachment(data.files, body);
+  // }
 
   @ApiParam({ name: 'coinSymbol' })
   @Get(':coinSymbol')

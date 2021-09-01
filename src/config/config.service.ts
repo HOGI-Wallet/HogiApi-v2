@@ -49,6 +49,10 @@ export class ConfigService {
       BSCSCAN_API_KEY: Joi.string().required(),
 
       WEBHOOK_CALL_BACK_BASE_URL: Joi.string().required(),
+
+      AWS_ACCESS_KEY: Joi.string().required(),
+      AWS_SECRET_KEY: Joi.string().required(),
+      AWS_BUCKET: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(
@@ -128,5 +132,17 @@ export class ConfigService {
 
   get webhookCallbackBaseUrl(): string {
     return this.envConfig.WEBHOOK_CALL_BACK_BASE_URL;
+  }
+
+  get awsAccessKey(): string {
+    return this.envConfig.AWS_ACCESS_KEY;
+  }
+
+  get awsSeceretKey(): string {
+    return this.envConfig.AWS_SECRET_KEY;
+  }
+
+  get awsBucket(): string {
+    return this.envConfig.AWS_BUCKET;
   }
 }

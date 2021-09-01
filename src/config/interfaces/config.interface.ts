@@ -21,4 +21,8 @@ export interface ConfigInterface {
   BSCSCAN_API_KEY: string;
 
   WEBHOOK_CALL_BACK_BASE_URL: string;
+  ROOT_UPLOAD_DIR: string;
+  AWS_ACCESS_KEY: string;
+  AWS_SECRET_KEY: string;
+  AWS_BUCKET: string;
 }

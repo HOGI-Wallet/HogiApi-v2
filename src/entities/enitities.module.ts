@@ -6,6 +6,11 @@ import { TransactionsEntity, TransactionSchema } from './transactions.entity';
 import { Global, Module } from '@nestjs/common';
 import { WalletEntity, WalletSchema } from './wallet.entity';
 import { AuthEntity, AuthSchema } from './auth.entity';
+import { NewsEntity, NewsSchema } from './news.entity';
+import {
+  FeaturedImageEntity,
+  FeaturedImageSchema,
+} from './featured-image.entity';
 
 const entitiesArray = [
   MongooseModule.forFeature([{ name: CoinEntity.name, schema: CoinSchema }]),
@@ -19,6 +24,10 @@ const entitiesArray = [
   MongooseModule.forFeature([{ name: RatesEntity.name, schema: RatesSchema }]),
   MongooseModule.forFeature([
     { name: WalletEntity.name, schema: WalletSchema },
+  ]),
+  MongooseModule.forFeature([{ name: NewsEntity.name, schema: NewsSchema }]),
+  MongooseModule.forFeature([
+    { name: FeaturedImageEntity.name, schema: FeaturedImageSchema },
   ]),
 ];
 
