@@ -2,7 +2,7 @@ version: 0.2
 env:
   variables:
     NODE_ENV: "production"
-    PORT: "4000"
+    PORT: "8080"
     JWT_SECRET: "kdfjhsdgsjfioeu ifueriuiefksdbfse df kdk"
     MONGO_URI: "mongodb://master:crypto#123@cryptokara-documentdb.crhask2sgx3u.us-east-2.docdb.amazonaws.com:27017/cryptokara?retryWrites=false"
     BLOCKCYPHER_URL: "https://api.blockcypher.com"
