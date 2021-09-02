@@ -20,6 +20,7 @@ import { Multer } from 'multer';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { DeleteNewsDto } from './dto/delete-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
+import { MongoIdDto } from '../../globals/dto/mongo-id.dto';
 
 type File = Express.Multer.File;
 
@@ -28,10 +29,14 @@ type File = Express.Multer.File;
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
-  @UseGuards(AdminAuthGuard)
   @Get('/')
   async getNews(@Body() body) {
     return this.newsService.getNews();
+  }
+
+  @Get('/:id')
+  async getSingleNews(@Param() params: MongoIdDto) {
+    return this.newsService.getSingleNews(params.id);
   }
 
   @UseGuards(AdminAuthGuard)
