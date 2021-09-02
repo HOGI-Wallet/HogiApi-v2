@@ -28,6 +28,9 @@ export class NewsEntity {
 
   @Prop()
   tags: string;
+
+  @Prop()
+  isFeatured: boolean;
 }
 
 export const NewsSchema = SchemaFactory.createForClass(NewsEntity);
