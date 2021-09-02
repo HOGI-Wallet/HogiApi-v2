@@ -19,7 +19,7 @@ import { UpdateAddressDto } from './dto/update-address.dto';
 export class AddressBookController {
   constructor(private readonly addressBookService: AddressBookService) {}
 
-  @Get('/get-address-book')
+  @Post('/get-address-book')
   async getAddressBook(@Body() body: GetAddressBookDto) {
     return this.addressBookService.getAddressBook(body.userId);
   }
