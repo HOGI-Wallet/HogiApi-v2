@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from './config/config.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 // import cors from 'cors';
+import { config } from 'aws-sdk';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -39,7 +40,23 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
 
-  const config: ConfigService = app.get(ConfigService);
-  await app.listen(config.port, () => `server started on ${config.port}`);
+  /**
+   * Importing config module (.env and other settings)
+   */
+  const configService: ConfigService = app.get(ConfigService);
+
+  /***
+   * AWS SDK Config
+   */
+  config.update({
+    accessKeyId: configService.awsAccessKey,
+    secretAccessKey: configService.awsSeceretKey,
+    region: configService.awsRegion,
+  });
+
+  await app.listen(
+    configService.port,
+    () => `server started on ${configService.port}`,
+  );
 }
 bootstrap();

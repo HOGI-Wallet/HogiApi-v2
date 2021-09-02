@@ -25,4 +25,5 @@ export interface ConfigInterface {
   AWS_ACCESS_KEY: string;
   AWS_SECRET_KEY: string;
   AWS_BUCKET: string;
+  AWS_REGION: string;
 }

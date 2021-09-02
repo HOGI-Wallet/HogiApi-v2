@@ -53,6 +53,7 @@ export class ConfigService {
       AWS_ACCESS_KEY: Joi.string().required(),
       AWS_SECRET_KEY: Joi.string().required(),
       AWS_BUCKET: Joi.string().required(),
+      AWS_REGION: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(
@@ -140,6 +141,10 @@ export class ConfigService {
 
   get awsSeceretKey(): string {
     return this.envConfig.AWS_SECRET_KEY;
+  }
+
+  get awsRegion(): string {
+    return this.envConfig.AWS_REGION;
   }
 
   get awsBucket(): string {
