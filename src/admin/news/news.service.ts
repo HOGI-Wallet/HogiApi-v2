@@ -16,6 +16,11 @@ export class NewsService {
   async getNews() {
     return this.newsModel.find().lean();
   }
+
+  async getSingleNews(id: string) {
+    return this.newsModel.find({ _id: id }).lean();
+  }
+
   async createNews(newsEntry: CreateNewsDto) {
     return this.newsModel.create(newsEntry);
   }
