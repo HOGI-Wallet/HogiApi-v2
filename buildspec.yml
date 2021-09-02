@@ -21,9 +21,9 @@ env:
     BSCSCAN_API_KEY: "T358T5VSPR96BDMAU28E17KQV79NDX1QK1"
     WEBHOOK_CALL_BACK_BASE_URL: "https://api.cryptokara.com"
     ROOT_UPLOAD_DIR: "coinIcons"
-    AWS_ACCESS_KEY": "AKIAQY6I37UBGL3LWAFR"
-    AWS_SECRET_KEY": "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"
-    AWS_BUCKET: "blockmerchantstorage"
+    AWS_ACCESS_KEY": "AKIARR2QORR7DA2IQPU3"
+    AWS_SECRET_KEY": "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"
+    AWS_BUCKET: "cryptokara-storage"
 phases:
   install:
     runtime-versions:
