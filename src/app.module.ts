@@ -12,6 +12,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
 import { InfuraModule } from './infura/infura.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AdminModule } from './admin/admin.module';
+import { AddressBookModule } from './address-book/address-book.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AdminModule } from './admin/admin.module';
     InfuraModule,
     ScheduleModule.forRoot(),
     AdminModule,
+    AddressBookModule,
   ],
   controllers: [AppController],
   providers: [AppService],

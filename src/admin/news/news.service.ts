@@ -4,6 +4,7 @@ import { CreateNewsDto } from './dto/create-news.dto';
 import { Model } from 'mongoose';
 import { NewsDocument, NewsEntity } from '../../entities/news.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateNewsDto } from './dto/update-news.dto';
 
 @Injectable()
 export class NewsService {
@@ -13,12 +14,22 @@ export class NewsService {
     private readonly s3Service: S3Service,
   ) {}
   async getNews() {
-    return await this.newsModel.find().lean();
+    return this.newsModel.find().lean();
   }
-  async createNews(body: CreateNewsDto) {
-    return await this.newsModel.create(body);
+  async createNews(newsEntry: CreateNewsDto) {
+    return this.newsModel.create(newsEntry);
+  }
+  async updateNews(newsEntry: UpdateNewsDto) {
+    return this.newsModel.findOneAndUpdate(
+      { _id: newsEntry._id },
+      { ...newsEntry },
+      { new: true },
+    );
+  }
+  async deleteNews(id: string) {
+    return this.newsModel.findOneAndDelete({ _id: id });
   }
   async uploadImage(imageBuffer: Buffer, filename: string) {
-    return await this.s3Service.uploadPublicFile(imageBuffer, filename);
+    return this.s3Service.uploadPublicFile(imageBuffer, filename);
   }
 }

@@ -11,6 +11,7 @@ import {
   FeaturedImageEntity,
   FeaturedImageSchema,
 } from './featured-image.entity';
+import { AddressBookEntity, AddressBookSchema } from './address-book.entity';
 
 const entitiesArray = [
   MongooseModule.forFeature([{ name: CoinEntity.name, schema: CoinSchema }]),
@@ -28,6 +29,9 @@ const entitiesArray = [
   MongooseModule.forFeature([{ name: NewsEntity.name, schema: NewsSchema }]),
   MongooseModule.forFeature([
     { name: FeaturedImageEntity.name, schema: FeaturedImageSchema },
+  ]),
+  MongooseModule.forFeature([
+    { name: AddressBookEntity.name, schema: AddressBookSchema },
   ]),
 ];
 
