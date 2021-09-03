@@ -5,13 +5,13 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { FeatureImageDto } from './featured-image.dto';
+import { S3ImageDto } from '../../../globals/dto/s3-image.dto';
 
 export class CreateNewsDto {
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => FeatureImageDto)
-  featuredImage: FeatureImageDto;
+  @Type(() => S3ImageDto)
+  featuredImage: S3ImageDto;
 
   @IsString()
   @IsNotEmpty()

@@ -7,11 +7,9 @@ import { Global, Module } from '@nestjs/common';
 import { WalletEntity, WalletSchema } from './wallet.entity';
 import { AuthEntity, AuthSchema } from './auth.entity';
 import { NewsEntity, NewsSchema } from './news.entity';
-import {
-  FeaturedImageEntity,
-  FeaturedImageSchema,
-} from './featured-image.entity';
+import { S3ImageEntity, S3ImageSchema } from './s3-image.entity';
 import { AddressBookEntity, AddressBookSchema } from './address-book.entity';
+import { DappLinksEntity, DappLinksSchema } from './dapp-links.entity';
 
 const entitiesArray = [
   MongooseModule.forFeature([{ name: CoinEntity.name, schema: CoinSchema }]),
@@ -28,7 +26,10 @@ const entitiesArray = [
   ]),
   MongooseModule.forFeature([{ name: NewsEntity.name, schema: NewsSchema }]),
   MongooseModule.forFeature([
-    { name: FeaturedImageEntity.name, schema: FeaturedImageSchema },
+    { name: DappLinksEntity.name, schema: DappLinksSchema },
+  ]),
+  MongooseModule.forFeature([
+    { name: S3ImageEntity.name, schema: S3ImageSchema },
   ]),
   MongooseModule.forFeature([
     { name: AddressBookEntity.name, schema: AddressBookSchema },

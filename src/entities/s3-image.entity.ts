@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type FeaturedImageDocument = FeaturedImageEntity &
+export type S3ImageDocument = S3ImageEntity &
   Document & {
     _id: any;
   };
 
 @Schema({ timestamps: true })
-export class FeaturedImageEntity {
+export class S3ImageEntity {
   @Prop()
   url?: string;
 
@@ -15,6 +15,4 @@ export class FeaturedImageEntity {
   key?: string;
 }
 
-export const FeaturedImageSchema = SchemaFactory.createForClass(
-  FeaturedImageEntity,
-);
+export const S3ImageSchema = SchemaFactory.createForClass(S3ImageEntity);
