@@ -4,7 +4,7 @@ env:
     NODE_ENV: "production"
     PORT: "8080"
     JWT_SECRET: "kdfjhsdgsjfioeu ifueriuiefksdbfse df kdk"
-    MONGO_URI: "mongodb://master:crypto#123@cryptokara-documentdb.crhask2sgx3u.us-east-2.docdb.amazonaws.com:27017/cryptokara?retryWrites=false"
+    MONGO_URI: "mongodb://main:crypto#123@cryptokaradocdb-mainnet.cluster-crhask2sgx3u.us-east-2.docdb.amazonaws.com:27017/cryptokara?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
     BLOCKCYPHER_URL: "https://api.blockcypher.com"
     BLOCKCYPHER_API_VERSION: "v1"
     BLOCKCYPHER_API_ENV: "main"
