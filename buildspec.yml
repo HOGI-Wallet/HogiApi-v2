@@ -31,7 +31,7 @@ phases:
       nodejs: latest
     commands:
       - npm install --global yarn
-      - npm install -g @nestjs/cli@7.5.1
+      - npm install -g @nestjs/cli
       - yarn install
   build:
     commands:
