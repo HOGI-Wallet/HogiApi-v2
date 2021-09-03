@@ -12,7 +12,9 @@ import { WalletHelper } from './wallet/helpers/wallet.helper';
 import { CoinRatesModule } from '../coin-rates/coin-rates.module';
 import { NewsController } from './news/news.controller';
 import { NewsService } from './news/news.service';
-import { S3Service } from './news/s3.service';
+import { S3Service } from '../globals/services/s3.service';
+import { DappLinksController } from './dapp-links/dapp-links.controller';
+import { DappLinksService } from './dapp-links/dapp-links.service';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { S3Service } from './news/s3.service';
     CoinController,
     WalletController,
     NewsController,
+    DappLinksController,
   ],
   providers: [
     AuthService,
@@ -38,6 +41,7 @@ import { S3Service } from './news/s3.service';
     WalletService,
     WalletHelper,
     NewsService,
+    DappLinksService,
     S3Service,
   ],
 })

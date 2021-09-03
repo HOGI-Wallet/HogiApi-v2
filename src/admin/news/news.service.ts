@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { S3Service } from './s3.service';
+import { S3Service } from '../../globals/services/s3.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { Model } from 'mongoose';
 import { NewsDocument, NewsEntity } from '../../entities/news.entity';

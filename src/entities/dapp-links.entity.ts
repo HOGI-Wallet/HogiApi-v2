@@ -2,32 +2,26 @@ import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { S3ImageEntity, S3ImageSchema } from './s3-image.entity';
 
-export type NewsDocument = NewsEntity &
+export type DappLinksDocument = DappLinksEntity &
   Document & {
     _id?: any;
   };
 
 @Schema({ timestamps: true })
-export class NewsEntity {
+export class DappLinksEntity {
   _id?: any;
 
   @Prop({ type: S3ImageEntity })
-  featuredImage?: S3ImageEntity;
+  image?: S3ImageEntity;
 
   @Prop()
   title: string;
 
   @Prop()
-  description: string;
+  shortDescription: string;
 
   @Prop()
-  content: string;
-
-  @Prop()
-  tags: string;
-
-  @Prop()
-  isFeatured: boolean;
+  url: string;
 }
 
-export const NewsSchema = SchemaFactory.createForClass(NewsEntity);
+export const DappLinksSchema = SchemaFactory.createForClass(DappLinksEntity);
