@@ -40,4 +40,3 @@ coinIcons
 documentation
 
 # added to gitignore as swagger plugin was causing error on server during deployment.
-nest-cli.json
