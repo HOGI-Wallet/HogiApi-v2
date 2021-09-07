@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { FixedRateHistoryDto } from './fixed-rate-history.dto';
 import { Type } from 'class-transformer';
-import { AttachmentDto } from './attachments.dto';
+import { UploadBodyDto } from './upload-body.dto';
 
 export class UpdateCoinDto {
   @IsMongoId()
@@ -30,8 +30,8 @@ export class UpdateCoinDto {
   @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => AttachmentDto)
-  icon: AttachmentDto;
+  @Type(() => UploadBodyDto)
+  icon: UploadBodyDto;
 
   @IsOptional()
   @IsString()

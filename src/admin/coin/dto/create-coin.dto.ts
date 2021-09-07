@@ -1,4 +1,3 @@
-import { CoinEntity } from '../../../entities/coin.entity';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -9,8 +8,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AttachmentDto } from './attachments.dto';
 import { FixedRateHistoryDto } from './fixed-rate-history.dto';
+import { UploadBodyDto } from './upload-body.dto';
 
 export class CreateCoinDto {
   @IsString()
@@ -20,8 +19,8 @@ export class CreateCoinDto {
   // @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => AttachmentDto)
-  icon: AttachmentDto;
+  @Type(() => UploadBodyDto)
+  icon: UploadBodyDto;
 
   @IsNotEmpty()
   @ValidateNested()
