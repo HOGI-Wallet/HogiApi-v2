@@ -35,6 +35,6 @@ export class NewsService {
     return this.newsModel.findOneAndDelete({ _id: id });
   }
   async uploadImage(imageBuffer: Buffer, filename: string) {
-    return this.s3Service.uploadPublicFile(imageBuffer, filename);
+    return this.s3Service.uploadPublicSVGs(imageBuffer, filename);
   }
 }

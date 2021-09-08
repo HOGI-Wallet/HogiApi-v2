@@ -22,4 +22,21 @@ export class S3Service {
       url: uploadResult.Location,
     };
   }
+
+  async uploadPublicSVGs(dataBuffer: Buffer, filename: string) {
+    const s3 = new S3();
+    const uploadResult = await s3
+      .upload({
+        Bucket: this.configService.awsBucket,
+        Body: dataBuffer,
+        Key: `${uuid()}-${filename}`,
+        ContentType: 'image/svg+xml',
+      })
+      .promise();
+
+    return {
+      key: uploadResult.Key,
+      url: uploadResult.Location,
+    };
+  }
 }
