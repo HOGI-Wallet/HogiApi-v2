@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { AttachmentsEntity, AttachmentsSchema } from './attachment.entity';
+import { S3ImageEntity, S3ImageSchema } from './s3-image.entity';
 import {
   FixedRateHistoryEntity,
   FixedRateHistorySchema,
@@ -15,8 +15,8 @@ export type CoinDocument = CoinEntity &
 export class CoinEntity {
   _id?: any;
 
-  @Prop({ type: AttachmentsSchema })
-  icon?: AttachmentsEntity;
+  @Prop({ type: S3ImageEntity })
+  icon?: S3ImageEntity;
 
   @Prop({ type: [FixedRateHistorySchema] })
   fixedRateHistory?: FixedRateHistoryEntity[];
