@@ -9,10 +9,7 @@ import { Model } from 'mongoose';
 import { UpdateCoinDto } from './dto/update-coin.dto';
 import { CreateCoinDto } from './dto/create-coin.dto';
 import { CoinRatesService } from '../../coin-rates/coin-rates.service';
-import {
-  CurrencyDocument,
-  CurrencyEntity,
-} from '../../entities/currency.entity';
+import { S3Service } from '../../globals/services/s3.service';
 
 @Injectable()
 export class CoinService {
@@ -20,6 +17,7 @@ export class CoinService {
     @InjectModel(CoinEntity.name)
     private readonly coinModel: Model<CoinDocument>,
     private readonly coinRatesService: CoinRatesService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async createCoin(coin: CreateCoinDto) {
@@ -103,5 +101,9 @@ export class CoinService {
 
     /** update network FEE */
     const networkFee = await this.coinRatesService.updateNetworkFee([coin]);
+  }
+
+  async uploadImage(imageBuffer: Buffer, filename: string) {
+    return this.s3Service.uploadPublicFile(imageBuffer, filename);
   }
 }
