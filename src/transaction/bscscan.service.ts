@@ -119,7 +119,7 @@ export class BscScanService {
       '&tag=latest&apikey=' +
       this.config.bscScanApiKey;
     try {
-      return (await this.get(url, 'getERC20Balance'))?.result;
+      return (await this.get(url, 'getBEP20Balance'))?.result;
     } catch (e) {
       console.log('Get Contract Balance failed', e);
     }
@@ -156,9 +156,9 @@ export class BscScanService {
       this.config.bscScanApiKey;
 
     try {
-      return (await this.get(url, 'getEthereumTxs'))?.result;
+      return (await this.get(url, 'getBnbTxs'))?.result;
     } catch (e) {
-      console.log('error getting ethereum transactions for address');
+      console.log('error getting Bnb transactions for address');
     }
   }
 
@@ -173,9 +173,9 @@ export class BscScanService {
       this.config.bscScanApiKey;
 
     try {
-      return (await this.get(url, 'getERC20Txs'))?.result;
+      return (await this.get(url, 'getBEP20Txs'))?.result;
     } catch (e) {
-      console.log('error getting ethereum transactions for address');
+      console.log('error getting BEP20 transactions for address');
     }
   }
 
@@ -225,7 +225,7 @@ export class BscScanService {
       this.config.bscScanApiKey;
 
     try {
-      return (await this.get(url, 'getEthTransactionByHash'))?.result;
+      return (await this.get(url, 'getBnbTransactionByHash'))?.result;
     } catch (e) {}
   }
 
