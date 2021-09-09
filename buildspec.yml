@@ -30,11 +30,12 @@ phases:
     runtime-versions:
       nodejs: latest
     commands:
-      #- npm install --global yarn
+      - npm install --global yarn
       - npm install -g @nestjs/cli
       - yarn install
   build:
     commands:
+      - npm install --save @nestjs/swagger swagger-ui-express
       - yarn build
   post_build:
     commands:
