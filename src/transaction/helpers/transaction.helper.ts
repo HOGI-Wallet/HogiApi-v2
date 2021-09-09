@@ -136,7 +136,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 6 },
+          // confirmations: { $lt: 1 },
           explorer: 'blockcypher',
         })
         .lean();
@@ -149,14 +149,25 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 6 },
-          // to: '0x2d4e97386be4d37fec4979e832a1c7b0e518519e',
-          // coinSymbol: 'hgau',
+          // confirmations: { $lt: 1 },
           explorer: 'etherscan',
         })
         .lean();
     } catch (e) {
-      throw new Error("couldn't get unconfrimed blockcypher txs from Db");
+      throw new Error("couldn't get unconfrimed etherscan txs from Db");
+    }
+  }
+
+  async getAllBscScanUnconfirmedTxs() {
+    try {
+      return await this.transactionModel
+        .find({
+          // confirmations: { $lt: 1 },
+          explorer: 'bscscan',
+        })
+        .lean();
+    } catch (e) {
+      throw new Error("couldn't get unconfrimed bscscan txs from Db");
     }
   }
 

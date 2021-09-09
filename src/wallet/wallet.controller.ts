@@ -11,12 +11,12 @@ import {
 } from '@nestjs/common';
 import { WalletCore } from './wallet-core.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
-import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { CreatePublicinfoDto } from './dto/create-publicinfo.dto';
 import { WalletService } from './wallet.service';
 import { WalletInterface } from './types/wallet.interface';
 import * as bip39 from 'bip39';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { GenerateWalletsDto } from './dto/generate-wallets.dto';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -25,6 +25,11 @@ export class WalletController {
     private readonly walletCore: WalletCore,
     private readonly walletService: WalletService,
   ) {}
+
+  @Post('generate-wallets')
+  async generateWallets(@Body() body: GenerateWalletsDto) {
+    return await this.walletService.generateWallets(body);
+  }
 
   @Post('new')
   async createNewWallet(@Body() body: CreateWalletDto) {

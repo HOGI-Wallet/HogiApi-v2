@@ -9,7 +9,7 @@ import { ConfigService } from '../config/config.service';
 import Web3 from 'web3';
 import { BlockcypherService } from '../blockcypher/blockcypher.service';
 import { TransactionModule } from '../transaction/transaction.module';
-import { EtherScanService } from '../transaction/ether-scan.service';
+import { EtherScanService } from '../transaction/etherscan.service';
 import { ConfigModule } from '../config/config.module';
 import { BscScanService } from '../transaction/bscscan.service';
 

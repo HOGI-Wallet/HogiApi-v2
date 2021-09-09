@@ -10,7 +10,7 @@ import Web3 from 'web3';
 import { BlockExplorerUtils } from '../../globals/utils/blockExplorerUtils';
 import coininfo from 'coininfo';
 import { ConfigService } from '../../config/config.service';
-import { EtherScanService } from '../../transaction/ether-scan.service';
+import { EtherScanService } from '../../transaction/etherscan.service';
 import { BscScanService } from '../../transaction/bscscan.service';
 
 @Injectable()

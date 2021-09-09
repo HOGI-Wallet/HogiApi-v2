@@ -21,7 +21,7 @@ import { Model } from 'mongoose';
 import { WalletHelper } from './helpers/wallet.helper';
 import { CreatePublicinfoDto } from './dto/create-publicinfo.dto';
 import { WalletDocument, WalletEntity } from '../entities/wallet.entity';
-import { EtherScanService } from '../transaction/ether-scan.service';
+import { EtherScanService } from '../transaction/etherscan.service';
 import { address } from 'bitcoinjs-lib';
 import { BscScanService } from '../transaction/bscscan.service';
 

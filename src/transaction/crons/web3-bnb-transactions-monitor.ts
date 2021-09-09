@@ -12,7 +12,7 @@ import { BlockcypherService } from '../../blockcypher/blockcypher.service';
 import { WalletHelper } from '../../wallet/helpers/wallet.helper';
 import Web3 from 'web3';
 import { SocketsService } from '../../webhooks/sockets.service';
-import { EtherScanService } from '../ether-scan.service';
+import { EtherScanService } from '../etherscan.service';
 import { BscScanService } from '../bscscan.service';
 
 @Injectable()
@@ -25,11 +25,13 @@ export class Web3BnbTransactionsMonitor {
     private readonly walletHelper: WalletHelper,
     private readonly socketService: SocketsService,
     private readonly bscScanService: BscScanService,
-  ) {}
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  ) {
+    // this.monitorBnbTx();
+  }
+  // @Cron(CronExpression.EVERY_5_MINUTES)
   async monitorBnbTx() {
     console.log('started monitoring bnb trxs');
-    const txs = await this.transactionHelper.getAllWeb3UnconfirmedTxs();
+    const txs = await this.transactionHelper.getAllBscScanUnconfirmedTxs();
     for (const tx of txs) {
       try {
         const receipt = await this.bscScanService.getTxReceipt(tx.txId);

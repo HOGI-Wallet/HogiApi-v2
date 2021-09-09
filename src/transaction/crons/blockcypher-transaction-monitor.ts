@@ -21,7 +21,9 @@ export class BlockcypherTransactionMonitor {
     private readonly blockypherService: BlockcypherService,
     private readonly walletHelper: WalletHelper,
     private readonly socketService: SocketsService,
-  ) {}
+  ) {
+    // this.monitorBTCLikeTxs();
+  }
   @Cron(CronExpression.EVERY_10_MINUTES)
   async monitorBTCLikeTxs() {
     console.log('started monitoring BC trxs');

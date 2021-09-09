@@ -59,8 +59,40 @@ export class RatesHelper {
     }
   }
 
+  async getBinanceCurrentGasPrices() {
+    try {
+      const response = await this.http
+        .get('https://bscgas.info/gas?apikey=a57f876b08a7462db84287147fee5b85')
+        .toPromise();
+      const prices = {
+        low: response.data.slow / 10,
+        medium: response.data.standard / 10,
+        high: response.data.fast / 10,
+      };
+      return prices;
+    } catch (e) {
+      console.log('get current gas prices: ', e);
+    }
+  }
+
   async erc20NetworkFee() {
     const gasPrices = await this.getCurrentGasPrices();
+
+    const networkFeeMin = parseFloat(
+      ((21000 * gasPrices.low) / 1e9).toFixed(8),
+    );
+    const networkFeeAvg = parseFloat(
+      ((21000 * gasPrices.medium) / 1e9).toFixed(8),
+    );
+    const networkFeeMax = parseFloat(
+      ((21000 * gasPrices.high) / 1e9).toFixed(8),
+    );
+
+    return { networkFeeMin, networkFeeMax, networkFeeAvg };
+  }
+
+  async binanceNetworkFee() {
+    const gasPrices = await this.getBinanceCurrentGasPrices();
 
     const networkFeeMin = parseFloat(
       ((21000 * gasPrices.low) / 1e9).toFixed(8),
