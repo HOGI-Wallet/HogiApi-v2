@@ -30,7 +30,7 @@ phases:
     runtime-versions:
       nodejs: latest
     commands:
-      - npm install --global yarn
+      #- npm install --global yarn
       - npm install -g @nestjs/cli
       - yarn install
   build:
