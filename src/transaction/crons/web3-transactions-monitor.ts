@@ -12,7 +12,7 @@ import { BlockcypherService } from '../../blockcypher/blockcypher.service';
 import { WalletHelper } from '../../wallet/helpers/wallet.helper';
 import Web3 from 'web3';
 import { SocketsService } from '../../webhooks/sockets.service';
-import { EtherScanService } from '../ether-scan.service';
+import { EtherScanService } from '../etherscan.service';
 
 @Injectable()
 export class Web3TransactionsMonitor {
@@ -27,7 +27,7 @@ export class Web3TransactionsMonitor {
   ) {
     // this.monitorEthTx();
   }
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  // @Cron(CronExpression.EVERY_5_MINUTES)
   async monitorEthTx() {
     console.log('started monitoring eth trxs');
     const txs = await this.transactionHelper.getAllWeb3UnconfirmedTxs();

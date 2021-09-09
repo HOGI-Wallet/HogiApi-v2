@@ -13,7 +13,7 @@ import {
 import { Cron, CronExpression } from '@nestjs/schedule';
 import Web3 from 'web3';
 import { SocketsService } from '../../webhooks/sockets.service';
-import { EtherScanService } from '../ether-scan.service';
+import { EtherScanService } from '../etherscan.service';
 
 @Injectable()
 export class SyncEthTransactions {
@@ -42,9 +42,9 @@ export class SyncEthTransactions {
       return await this.walletModel
         .find({
           $or: [{ coinSymbol: 'eth' }, { isERC20: true }],
-          lastTxUpdate: {
-            $lte: new Date(new Date().getTime() - 1000 * 60 * 5).toISOString(),
-          },
+          // lastTxUpdate: {
+          //   $lte: new Date(new Date().getTime() - 1000 * 60 * 5).toISOString(),
+          // },
         })
         .populate('coin')
         .lean();

@@ -319,14 +319,17 @@ export class CoinRatesService {
   }
 
   async getNetworkFee(coin: CoinEntity) {
-    if (
-      coin.isBep20 ||
-      coin.isErc20 ||
-      coin.coinSymbol.toLowerCase() == 'eth' ||
-      coin.coinSymbol.toLowerCase() == 'bnb'
-    )
+    if (coin.isErc20 || coin.coinSymbol.toLowerCase() == 'eth') {
       return this.ratesHelper.erc20NetworkFee();
-    else return this.ratesHelper.getPriceFromBC(coin.coinSymbol);
+    } else if (
+      coin.isBep20 ||
+      coin.coinSymbol.toLowerCase() == 'bnb' ||
+      coin.coinSymbol.toLowerCase() == 'bsc'
+    ) {
+      return this.ratesHelper.binanceNetworkFee();
+    } else {
+      return this.ratesHelper.getPriceFromBC(coin.coinSymbol);
+    }
   }
 
   async getAllActiveCoins() {

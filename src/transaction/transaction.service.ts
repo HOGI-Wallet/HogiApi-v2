@@ -18,7 +18,7 @@ import { TransactionHelper } from './helpers/transaction.helper';
 import { InfuraService } from '../infura/infura.service';
 import { Transaction as EthereumTx } from 'ethereumjs-tx';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
-import { EtherScanService } from './ether-scan.service';
+import { EtherScanService } from './etherscan.service';
 import { BscScanService } from './bscscan.service';
 
 @Injectable()

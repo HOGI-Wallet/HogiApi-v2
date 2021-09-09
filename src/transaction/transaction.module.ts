@@ -13,7 +13,7 @@ import Web3 from 'web3';
 import { WebhooksModule } from '../webhooks/webhooks.module';
 import { Web3TransactionsMonitor } from './crons/web3-transactions-monitor';
 import { SyncEthTransactions } from './crons/sync-eth-transactions';
-import { EtherScanService } from './ether-scan.service';
+import { EtherScanService } from './etherscan.service';
 import { SyncBnbTransactions } from './crons/sync-bnb-transactions';
 import { BscScanService } from './bscscan.service';
 import { Web3BnbTransactionsMonitor } from './crons/web3-bnb-transactions-monitor';

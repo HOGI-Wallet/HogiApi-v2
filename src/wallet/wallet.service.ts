@@ -9,6 +9,9 @@ import { WalletDocument, WalletEntity } from '../entities/wallet.entity';
 import { WalletHelper } from './helpers/wallet.helper';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { ConfigService } from '../config/config.service';
+import { GenerateWalletsDto } from './dto/generate-wallets.dto';
+import { WalletInterface } from './types/wallet.interface';
+import { WalletCore } from './wallet-core.service';
 
 @Injectable()
 export class WalletService {
@@ -21,6 +24,7 @@ export class WalletService {
     private readonly walletModel: Model<WalletDocument>,
     private readonly walletHelper: WalletHelper,
     private readonly config: ConfigService,
+    private readonly walletCore: WalletCore,
   ) {}
 
   async getMyWalletBalance(
@@ -51,7 +55,6 @@ export class WalletService {
       info.balance,
     );
   }
-
   async addPublicInfo(data: CreatePublicinfoDto) {
     const coin = await this.coinModel
       .findOne({
@@ -92,7 +95,6 @@ export class WalletService {
       //
     }
   }
-
   async getCoinInfo(coinSymbol: string): Promise<CoinEntity> {
     try {
       const coin = await this.coinModel
@@ -107,5 +109,57 @@ export class WalletService {
     } catch (e) {
       console.log(e);
     }
+  }
+  async generateWallets(body: GenerateWalletsDto) {
+    const coins = await this.coinModel.find().lean();
+    const wallets = await coins.map(async (coinEntity) => {
+      const coin = await this.getCoinInfo(coinEntity.coinSymbol);
+      let symbol = coinEntity.coinSymbol;
+      if (coin.isErc20) {
+        symbol = 'eth';
+      }
+      if (coin.isBep20) {
+        symbol = 'bnb';
+      }
+      if (!body.recovery) {
+        try {
+          const wallet: WalletInterface = await WalletCore.createHdWallet(
+            symbol,
+            body.mnemonics,
+          );
+
+          /** add public info in db for realtime balances update */
+          const pubInfo = await this.addPublicInfo({
+            coinSymbol: coinEntity.coinSymbol,
+            hdPath: wallet.path,
+            address: wallet.address,
+          });
+
+          return { ...wallet, isErc20: coin?.isErc20, isBep20: coin?.isBep20 };
+        } catch (e) {
+          throw new UnprocessableEntityException(e.message);
+        }
+      } else {
+        try {
+          const wallet = await this.walletCore.accountRecovery(
+            coin,
+            body.mnemonics,
+            2,
+            null,
+          );
+          /** add public info in db for realtime balances update */
+          const pubInfo = await this.addPublicInfo({
+            coinSymbol: coinEntity.coinSymbol,
+            hdPath: wallet.path,
+            address: wallet.address,
+          });
+
+          return { ...wallet, isErc20: coin?.isErc20, isBep20: coin?.isBep20 };
+        } catch (e) {
+          throw new UnprocessableEntityException(e.message);
+        }
+      }
+    });
+    return wallets;
   }
 }
