@@ -35,7 +35,7 @@ phases:
       - yarn install
   build:
     commands:
-      - npm install --save @nestjs/swagger swagger-ui-express
+      - npm install --save @nestjs/swagger fastify-swagger
       - yarn build
   post_build:
     commands:
