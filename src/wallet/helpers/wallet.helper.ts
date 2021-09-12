@@ -332,7 +332,7 @@ export class WalletHelper {
           coin.coinSymbol,
           address,
         );
-        return String(altcoinBalance?.final_balance);
+        return String(altcoinBalance?.final_balance / Math.pow(10, 8));
       }
     } catch (e) {
       console.log(e);
@@ -356,7 +356,7 @@ export class WalletHelper {
 
   static BCNetwork(symbol) {
     if (process.env.NODE_ENV === 'development') {
-      return 'bcy/test';
+      return 'btc/test3';
     } else {
       return symbol + '/main';
     }

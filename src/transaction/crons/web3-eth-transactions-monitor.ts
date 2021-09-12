@@ -15,7 +15,7 @@ import { SocketsService } from '../../webhooks/sockets.service';
 import { EtherScanService } from '../etherscan.service';
 
 @Injectable()
-export class Web3TransactionsMonitor {
+export class Web3EthTransactionsMonitor {
   constructor(
     @InjectModel(TransactionsEntity.name)
     private readonly transactionModel: TransactionModel,
@@ -25,9 +25,9 @@ export class Web3TransactionsMonitor {
     private readonly socketService: SocketsService,
     private readonly etherScanService: EtherScanService,
   ) {
-    // this.monitorEthTx();
+    this.monitorEthTx();
   }
-  // @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async monitorEthTx() {
     console.log('started monitoring eth trxs');
     const txs = await this.transactionHelper.getAllWeb3UnconfirmedTxs();

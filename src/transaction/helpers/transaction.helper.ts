@@ -136,7 +136,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          // confirmations: { $lt: 1 },
+          confirmations: { $lt: 1 },
           explorer: 'blockcypher',
         })
         .lean();
@@ -149,7 +149,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          // confirmations: { $lt: 1 },
+          confirmations: { $lt: 1 },
           explorer: 'etherscan',
         })
         .lean();
@@ -162,7 +162,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          // confirmations: { $lt: 1 },
+          confirmations: { $lt: 1 },
           explorer: 'bscscan',
         })
         .lean();

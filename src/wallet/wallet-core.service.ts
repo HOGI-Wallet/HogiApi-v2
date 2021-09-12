@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWalletDto } from './dto/create-wallet.dto';
-import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { WalletInterface } from './types/wallet.interface';
 import { BlockcypherService } from '../blockcypher/blockcypher.service';
 import bip44Constants from 'bip44-constants';
@@ -48,8 +46,8 @@ export class WalletCore {
     private readonly coinModel: Model<CoinDocument>,
     @InjectModel(WalletEntity.name)
     private readonly walletModel: Model<WalletDocument>,
-    private readonly blockcypherService: BlockcypherService,
     private readonly walletHelper: WalletHelper,
+    private readonly blockcypherService: BlockcypherService,
     private readonly etherScanService: EtherScanService,
     private readonly bscScanService: BscScanService,
   ) {}
@@ -335,6 +333,7 @@ export class WalletCore {
       return txs?.length > 0 ? true : false;
     } else if (coinType === 'isBnb' || coinType === 'isBEP20') {
       const txs = await this.bscScanService.getBnbTxs(address);
+      return txs?.length > 0 ? true : false;
     } else {
       const txs = await this.blockcypherService.getTxCountOfAddress(
         address,
@@ -344,26 +343,29 @@ export class WalletCore {
     }
   }
 
-  async addPublicInfo(data: CreatePublicinfoDto) {
-    const coin = await this.coinModel
-      .findOne({ coinSymbol: new RegExp(data.coinSymbol, 'i') })
-      .lean();
-
+  async addPublicInfo(publicInfo: CreatePublicinfoDto[]) {
     try {
-      const walletAdded = await this.walletModel.create({
-        addresses: { ...data, coinId: coin._id.toString() },
-      });
+      const publicInfoAdded = publicInfo.map(async (data) => {
+        const coin = await this.coinModel
+          .findOne({ coinSymbol: new RegExp(data.coinSymbol, 'i') })
+          .lean();
 
-      // todo register webhooks
-      const coinType = await this.walletHelper.getCoinType(coin);
-      if (coinType === 'btcLike') {
-        await this.blockcypherService.registerWebhook(
-          data.address,
-          coin.coinSymbol,
-        );
-      }
-      return walletAdded;
-    } catch (e) {
+        const walletAdded = await this.walletModel.create({
+          addresses: { ...data, coinId: coin._id.toString() },
+        });
+
+        // todo register webhooks
+        const coinType = await this.walletHelper.getCoinType(coin);
+        if (coinType === 'btcLike') {
+          await this.blockcypherService.registerWebhook(
+            data.address,
+            coin.coinSymbol,
+          );
+        }
+        return walletAdded;
+      });
+      return publicInfoAdded;
+    } catch (err) {
       //
     }
   }
