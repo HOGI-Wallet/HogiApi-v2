@@ -25,7 +25,7 @@ export class Web3EthTransactionsMonitor {
     private readonly socketService: SocketsService,
     private readonly etherScanService: EtherScanService,
   ) {
-    this.monitorEthTx();
+    // this.monitorEthTx();
   }
   @Cron(CronExpression.EVERY_5_MINUTES)
   async monitorEthTx() {

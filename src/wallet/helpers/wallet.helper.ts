@@ -188,7 +188,6 @@ export class WalletHelper {
     const balance = await this.blockcypherService.getBalance(coin, address);
     await this.walletModel.updateAddressBalance(
       address,
-      // String(balance.final_balance),
       String(balance.final_balance / Math.pow(10, 8)),
       coin,
     );
@@ -214,8 +213,7 @@ export class WalletHelper {
 
   async updateERC20WalletsBalance(coinSymbol: string, address: string) {
     try {
-      // get balance from infuraupdateERC20WalletsBalance
-
+      // get balance from infura
       const coin: CoinEntity = await this.coinModel.findOne({
         coinSymbol: new RegExp('^' + coinSymbol + '$', 'i'),
       });

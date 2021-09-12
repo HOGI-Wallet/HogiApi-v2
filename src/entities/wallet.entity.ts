@@ -64,11 +64,15 @@ export const WalletSchema = SchemaFactory.createForClass(WalletEntity);
 WalletSchema.statics.updateAddressBalance = async function (
   address: string,
   balance: string,
+  coinSymbol: string,
 ) {
   const updated = await this.findOneAndUpdate(
-    { address: new RegExp(`^${address}$`, 'i') },
+    {
+      address: new RegExp(`^${address}$`, 'i'),
+      coinSymbol: new RegExp(`^${coinSymbol}$`, 'i'),
+    },
     { balance },
-    { upsert: true, new: true },
+    { new: true },
   );
   return updated;
 };

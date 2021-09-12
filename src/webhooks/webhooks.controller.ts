@@ -37,16 +37,13 @@ export class WebhooksController {
     );
 
     /** update balance in db */
+    const balance = await this.blockypherService.getBalance(
+      param.coinSymbol,
+      param.address,
+    );
     await this.walletModel.updateAddressBalance(
       param.address,
-      String(
-        (
-          await this.blockypherService.getBalance(
-            param.coinSymbol,
-            param.address,
-          )
-        )?.final_balance,
-      ),
+      String(balance.final_balance / Math.pow(10, 8)),
       param.coinSymbol,
     );
     this.socket.emit(tx, param.address);

@@ -35,16 +35,16 @@ export class SyncBnbTransactions {
   }
 
   /**
-   * get all eth and erc20 addresses
+   * get all bnb and bep20 addresses
    */
   async getBnbAddresses(): Promise<WalletEntity[]> {
     try {
       return await this.walletModel
         .find({
           $or: [{ coinSymbol: 'bnb' }, { isBEP20: true }],
-          // lastTxUpdate: {
-          //   $lte: new Date(new Date().getTime() - 1000 * 60 * 5).toISOString(),
-          // },
+          lastTxUpdate: {
+            $lte: new Date(new Date().getTime() - 1000 * 60 * 5).toISOString(),
+          },
         })
         .populate('coin')
         .lean();
