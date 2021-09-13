@@ -10,6 +10,10 @@ import { NewsEntity, NewsSchema } from './news.entity';
 import { S3ImageEntity, S3ImageSchema } from './s3-image.entity';
 import { AddressBookEntity, AddressBookSchema } from './address-book.entity';
 import { DappLinksEntity, DappLinksSchema } from './dapp-links.entity';
+import {
+  BlockCypherWebhookEntity,
+  BlockCypherWebhookSchema,
+} from './blockcypher-webhook.entity';
 
 const entitiesArray = [
   MongooseModule.forFeature([{ name: CoinEntity.name, schema: CoinSchema }]),
@@ -33,6 +37,9 @@ const entitiesArray = [
   ]),
   MongooseModule.forFeature([
     { name: AddressBookEntity.name, schema: AddressBookSchema },
+  ]),
+  MongooseModule.forFeature([
+    { name: BlockCypherWebhookEntity.name, schema: BlockCypherWebhookSchema },
   ]),
 ];
 

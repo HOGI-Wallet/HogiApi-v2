@@ -1,9 +1,15 @@
-import { BadRequestException, HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
 import { ECPair, script, Transaction } from 'bitcoinjs-lib';
 import { IBalanceEndPointResponse } from './types/interfaces/api.responses';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { WalletHelper } from '../wallet/helpers/wallet.helper';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import {
+  BlockCypherWebhookDocument,
+  BlockCypherWebhookEntity,
+} from '../entities/blockcypher-webhook.entity';
 
 function delay(seconds) {
   return new Promise((resolve) => {
@@ -13,6 +19,8 @@ function delay(seconds) {
 @Injectable()
 export class BlockcypherService {
   constructor(
+    @InjectModel(BlockCypherWebhookEntity.name)
+    private readonly blockCypherWebhookModel: Model<BlockCypherWebhookDocument>,
     private readonly config: ConfigService,
     private readonly http: HttpService,
   ) {}
@@ -62,20 +70,37 @@ export class BlockcypherService {
   async registerWebhook(address: string, coinSymbol: string) {
     // register the coin webhook on blockcypher
     // TODO register for confirmed tx event
-    const data = {
-      event: 'unconfirmed-tx',
-      address,
-      url: `${this.config.webhookCallbackBaseUrl}/webhooks/blockCypher/hooks/callback/${coinSymbol}/${address}`,
-    };
+    const webhook = await this.blockCypherWebhookModel
+      .find({
+        address: address,
+        coinSymbol: coinSymbol,
+        event: 'unconfirmed-tx',
+        url: `${this.config.webhookCallbackBaseUrl}/webhooks/blockCypher/hooks/callback/${coinSymbol}/${address}`,
+      })
+      .lean();
+    if (!webhook.length) {
+      const data = {
+        event: 'unconfirmed-tx',
+        address,
+        url: `${this.config.webhookCallbackBaseUrl}/webhooks/blockCypher/hooks/callback/${coinSymbol}/${address}`,
+      };
 
-    try {
-      const endpoint = 'hooks';
-      const res = await this.http
-        .post(BlockcypherService.buildApiUrl(coinSymbol, endpoint), data)
-        .toPromise();
-      return res.data;
-    } catch (e) {
-      console.log('error creating webhook: ', e.message);
+      try {
+        const endpoint = 'hooks';
+        const res = await this.http
+          .post(BlockcypherService.buildApiUrl(coinSymbol, endpoint), data)
+          .toPromise();
+        await this.blockCypherWebhookModel.create({
+          ...data,
+          coinSymbol,
+          webhookId: res.data.id,
+        });
+        return res.data;
+      } catch (e) {
+        console.log('error creating webhook: ', e.message);
+      }
+    } else {
+      console.log('webhook already registered!');
     }
   }
 
