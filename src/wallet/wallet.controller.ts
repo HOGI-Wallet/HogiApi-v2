@@ -16,7 +16,6 @@ import { WalletService } from './wallet.service';
 import { WalletInterface } from './types/wallet.interface';
 import * as bip39 from 'bip39';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { GenerateWalletsDto } from './dto/generate-wallets.dto';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -26,9 +25,14 @@ export class WalletController {
     private readonly walletService: WalletService,
   ) {}
 
-  @Post('generate-wallets')
-  async generateWallets(@Body() body: GenerateWalletsDto) {
-    return await this.walletService.generateWallets(body);
+  @Get('new/mnemonic')
+  async generateBIP39Mnemonic() {
+    return bip39.generateMnemonic();
+  }
+
+  @Post('validate/mnemonic')
+  async validateBip39Mnemonic(@Body() body) {
+    return bip39.validateMnemonic(body.mnemonic);
   }
 
   @Post('new')
@@ -82,19 +86,11 @@ export class WalletController {
     }
   }
 
-  @Get('new/mnemonic')
-  async generateBIP39Mnemonic() {
-    return bip39.generateMnemonic();
-  }
-
-  @Post('validate/mnemonic')
-  async validateBip39Mnemonic(@Body() body) {
-    return bip39.validateMnemonic(body.mnemonic);
-  }
   @Post('publicinfo')
-  async addPublicInfoInDb(@Body() body: CreatePublicinfoDto) {
+  async addPublicInfoInDb(@Body() body: CreatePublicinfoDto[]) {
     return this.walletCore.addPublicInfo(body);
   }
+
   @ApiParam({ name: 'address' })
   @ApiParam({ name: 'coinSymbol' })
   @Get('balance/:coinSymbol/:address')

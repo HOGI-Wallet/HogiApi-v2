@@ -28,7 +28,7 @@ export class Web3BnbTransactionsMonitor {
   ) {
     // this.monitorBnbTx();
   }
-  // @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async monitorBnbTx() {
     console.log('started monitoring bnb trxs');
     const txs = await this.transactionHelper.getAllBscScanUnconfirmedTxs();

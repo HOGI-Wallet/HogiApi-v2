@@ -11,7 +11,7 @@ import { BlockcypherTransactionMonitor } from './crons/blockcypher-transaction-m
 import { ConfigService } from '../config/config.service';
 import Web3 from 'web3';
 import { WebhooksModule } from '../webhooks/webhooks.module';
-import { Web3TransactionsMonitor } from './crons/web3-transactions-monitor';
+import { Web3EthTransactionsMonitor } from './crons/web3-eth-transactions-monitor';
 import { SyncEthTransactions } from './crons/sync-eth-transactions';
 import { EtherScanService } from './etherscan.service';
 import { SyncBnbTransactions } from './crons/sync-bnb-transactions';
@@ -33,7 +33,7 @@ import { Web3BnbTransactionsMonitor } from './crons/web3-bnb-transactions-monito
     TransactionRepo,
     SubmitTransactionValidationPipe,
     BlockcypherTransactionMonitor,
-    Web3TransactionsMonitor,
+    Web3EthTransactionsMonitor,
     Web3BnbTransactionsMonitor,
     SyncEthTransactions,
     SyncBnbTransactions,
