@@ -293,7 +293,8 @@ export class WalletHelper {
     )
       _balance = parseFloat(balance);
     else if (coinType === 'btcLike')
-      _balance = parseFloat(balance) / Math.pow(10, 8);
+      // _balance = parseFloat(balance) / Math.pow(10, 8);
+      _balance = parseFloat(balance);
 
     // balance in vs_currency
     return {
