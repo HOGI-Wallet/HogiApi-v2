@@ -87,8 +87,12 @@ export class WalletController {
   }
 
   @Post('publicinfo')
-  async addPublicInfoInDb(@Body() body: CreatePublicinfoDto[]) {
-    return this.walletCore.addPublicInfo(body);
+  async addPublicInfoInDb(@Body() publicinfoData: CreatePublicinfoDto[]) {
+    let publicInfoDataAdded = [];
+    for (const data of publicinfoData) {
+      publicInfoDataAdded.push(await this.walletService.addPublicInfo(data));
+    }
+    return publicInfoDataAdded;
   }
 
   @ApiParam({ name: 'address' })
