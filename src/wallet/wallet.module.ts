@@ -12,6 +12,7 @@ import { TransactionModule } from '../transaction/transaction.module';
 import { EtherScanService } from '../transaction/etherscan.service';
 import { ConfigModule } from '../config/config.module';
 import { BscScanService } from '../transaction/bscscan.service';
+import { CoinRatesService } from '../coin-rates/coin-rates.service';
 
 @Module({
   imports: [

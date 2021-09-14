@@ -342,31 +342,4 @@ export class WalletCore {
       return txs > 0 ? true : false;
     }
   }
-
-  async addPublicInfo(publicInfo: CreatePublicinfoDto[]) {
-    try {
-      const publicInfoAdded = publicInfo.map(async (data) => {
-        const coin = await this.coinModel
-          .findOne({ coinSymbol: new RegExp(data.coinSymbol, 'i') })
-          .lean();
-
-        const walletAdded = await this.walletModel.create({
-          addresses: { ...data, coinId: coin._id.toString() },
-        });
-
-        // todo register webhooks
-        const coinType = await this.walletHelper.getCoinType(coin);
-        if (coinType === 'btcLike') {
-          await this.blockcypherService.registerWebhook(
-            data.address,
-            coin.coinSymbol,
-          );
-        }
-        return walletAdded;
-      });
-      return publicInfoAdded;
-    } catch (err) {
-      //
-    }
-  }
 }

@@ -31,11 +31,12 @@ export class CoinRatesService {
           currencyCode: new RegExp(vs_currency, 'i'),
         })
         .lean();
-      const coin = await this.coinModel.findById(rate.coinId).lean();
-      return {
-        ...rate,
-        coin,
-      };
+      return rate;
+      // const coin = await this.coinModel.findById(rate.coinId).lean();
+      // return {
+      //   ...rate,
+      //   coin,
+      // };
     } catch (e) {
       // throw new Error("couldn't fetch rates from db");
     }
