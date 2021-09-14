@@ -8,12 +8,15 @@ import { CreatePublicinfoDto } from './dto/create-publicinfo.dto';
 import { WalletDocument, WalletEntity } from '../entities/wallet.entity';
 import { WalletHelper } from './helpers/wallet.helper';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
+import { RatesDocument, RatesEntity } from '../entities/rates.entity';
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectModel(CoinEntity.name)
     private readonly coinModel: Model<CoinDocument>,
+    @InjectModel(RatesEntity.name)
+    private readonly ratesModel: Model<RatesDocument>,
     private readonly blockcypherService: BlockcypherService,
     private readonly coinRateService: CoinRatesService,
     @InjectModel(WalletEntity.name)

@@ -5,9 +5,11 @@ import { ConfigService } from './config/config.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 // import cors from 'cors';
 import { config } from 'aws-sdk';
+// import { json } from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // app.use(json({ limit: '50mb' }));
   /**
    * App cors settings
    */
