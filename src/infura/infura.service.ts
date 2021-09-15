@@ -85,8 +85,8 @@ export class InfuraService {
           // send data to tx., and tx.from
           // transform tx;
           const _tx = await this.transactionHelper.transformTransaction([txDB]);
-          this.socketService.emit(_tx[0], tx.to);
-          this.socketService.emit(_tx[0], tx.from);
+          // this.socketService.emit(_tx[0], tx.to);
+          // this.socketService.emit(_tx[0], tx.from);
         } catch (e) {
           console.log(e);
         }

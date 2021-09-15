@@ -95,7 +95,7 @@ export class SyncEthTransactions {
     }
     const txs = await Promise.all(dbPromises);
     // emit txs to sockets
-    this.socket.emitTxs(txs);
+    // this.socket.emitTxs(txs);
     return txs;
   }
 
@@ -185,7 +185,10 @@ export class SyncEthTransactions {
 
     const updateWallets = await Promise.all(updatesDbPromises);
     // emit to sockets
-    this.socket.emitWalletBalances(updateWallets);
+    // this.socket.emitWalletBalances(updateWallets);
+    for (const wallet of updateWallets) {
+      this.socket.emit({ coinSymbol: wallet.coinSymbol }, wallet.address);
+    }
 
     return _wallets;
   }

@@ -52,8 +52,8 @@ export class Web3EthTransactionsMonitor {
           );
           // send data to tx., and tx.from
           const _tx = await this.transactionHelper.transformTransaction([txDB]);
-          this.socketService.emit(_tx[0], tx.to);
-          this.socketService.emit(_tx[0], tx.from);
+          this.socketService.emit({ coinSymbol: _tx[0].coinSymbol }, tx.to);
+          this.socketService.emit({ coinSymbol: _tx[0].coinSymbol }, tx.from);
         }
       } catch (e) {
         console.log(e);
