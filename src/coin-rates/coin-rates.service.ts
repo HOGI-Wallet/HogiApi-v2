@@ -336,7 +336,7 @@ export class CoinRatesService {
     }
 
     // send updated data on sockets
-    this.socketService.emit({ message: 'network fee updated!' }, 'coin-data');
+    this.socketService.emit({ message: 'coin data updated!' }, 'coin-data');
   }
 
   async getNetworkFee(coin: CoinEntity) {
