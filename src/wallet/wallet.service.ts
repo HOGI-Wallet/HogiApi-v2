@@ -157,6 +157,7 @@ export class WalletService {
         walletInfo.balance,
       );
       publicInfoDataAdded.push({
+        coinSymbol: data.coinSymbol,
         chart_data: {
           ...ratesInfo,
         },
