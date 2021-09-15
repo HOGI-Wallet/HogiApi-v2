@@ -134,7 +134,9 @@ export class InfuraService {
     const trx = {
       from: this.web3.utils.toChecksumAddress(data.from),
       to: this.web3.utils.toChecksumAddress(data.to),
-      value: this.web3.utils.toHex(this.web3.utils.toWei(data.amount, 'ether')),
+      value: this.web3.utils.toHex(
+        this.web3.utils.toWei(String(data.amount), 'ether'),
+      ),
       gas: 80000,
       gasPrice: gasPrices.low * 1000000000,
       nonce: nonce,
@@ -149,7 +151,7 @@ export class InfuraService {
         { from: this.web3.utils.toChecksumAddress(data.from) },
       );
       trx['data'] = contract.methods
-        .transfer(data.to, this.web3.utils.toWei(data.amount, 'ether'))
+        .transfer(data.to, this.web3.utils.toWei(String(data.amount), 'ether'))
         .encodeABI();
       trx.to = coin.contractAddress;
       delete trx.value;

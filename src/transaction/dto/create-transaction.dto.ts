@@ -10,7 +10,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   from: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  amount: string;
+  amount: number;
 }

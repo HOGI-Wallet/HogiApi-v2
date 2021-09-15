@@ -44,54 +44,34 @@ export class TransactionService {
       .lean();
 
     if (!coin) throw new NotFoundException('coin not found in db');
-
-    /** create tx to send on the basis of cointype */
-    const coinType = await this.walletHelper.getCoinType(coin);
-
-    if (coinType === 'isEth' || coinType === 'isERC20') {
-      /** get balance from etherscan*/
-      return await this.infuraService.createNewEthTx(coin, tx);
-    } else if (coinType === 'btcLike') {
-      /** ge balance from blockcypher*/
-      try {
-        return await this.blockcypherService.createNewTx(
-          coin.coinSymbol,
-          tx.from,
-          tx.to,
-          (tx.amount as unknown) as number,
-        );
-      } catch (e) {
-        throw new UnprocessableEntityException({
-          message: e.message,
-        });
-      }
-    } else if (coinType === 'stellar') {
-      /** get balance from stellar  */
+    try {
+      return await this.blockcypherService.createNewTx(
+        coin.coinSymbol,
+        tx.from,
+        tx.to,
+        tx.amount,
+      );
+    } catch (e) {
+      throw new UnprocessableEntityException({
+        message: e.message,
+      });
     }
   }
 
   async sendTx(coinSymbol, data: SendTransactionDto) {
-    const cointype = await this.walletHelper.getCoinType(coinSymbol);
     try {
-      if (cointype === 'btcLike') {
-        const tx = await this.blockcypherService.sendSignedTx(
-          data.tx,
-          data.signatures,
-          data.pubKeys,
-          coinSymbol,
-        );
+      const tx = await this.blockcypherService.sendSignedTx(
+        data.tx,
+        data.signatures,
+        data.pubKeys,
+        coinSymbol,
+      );
 
-        // log tx in db
-        await this.transactionRepo.createTx(
-          this.transactionHelper.transformBCTx(coinSymbol, tx.tx),
-        );
-        return tx;
-      } else if (cointype === 'isEth' || cointype === 'isERC20') {
-        return this.infuraService.submitTx(data.serializedTX);
-      } else if (cointype === 'isBnb' || cointype === 'isBNB20') {
-        // TODO: Integrate some platform to listen transactions on Binance Chain
-        console.log('Submit Transaction For Listening Here');
-      }
+      // log tx in db
+      await this.transactionRepo.createTx(
+        this.transactionHelper.transformBCTx(coinSymbol, tx.tx),
+      );
+      return tx;
     } catch (e) {
       throw new UnprocessableEntityException({ message: e.message });
     }

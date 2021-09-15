@@ -112,12 +112,7 @@ export class BlockcypherService {
    * @param symbol is coin(btc and altcoins) symbol
    * TODO satoshi conversions
    */
-  async createNewTx(
-    symbol: string,
-    from: string,
-    to: string,
-    amount: number,
-  ): Promise<NewTXEndPoint.INewTx> {
+  async createNewTx(symbol: string, from: string, to: string, amount: number) {
     const body = {
       inputs: [{ addresses: [from] }],
       outputs: [{ addresses: [to], value: amount }],
@@ -125,7 +120,10 @@ export class BlockcypherService {
 
     try {
       const tx = await this.http
-        .post(BlockcypherService.buildApiUrl(symbol, 'txs/new'), body)
+        .post('https://api.blockcypher.com/v1/btc/test3/txs/new', {
+          inputs: [{ addresses: [from] }],
+          outputs: [{ addresses: [to], value: amount }],
+        })
         .toPromise();
 
       return tx.data;
