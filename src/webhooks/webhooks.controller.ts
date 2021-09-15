@@ -46,6 +46,6 @@ export class WebhooksController {
       String(balance.final_balance / Math.pow(10, 8)),
       param.coinSymbol,
     );
-    this.socket.emit(tx, param.address);
+    this.socket.emit({ coinSymbol: param.coinSymbol }, param.address);
   }
 }

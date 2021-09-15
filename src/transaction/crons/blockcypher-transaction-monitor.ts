@@ -45,8 +45,8 @@ export class BlockcypherTransactionMonitor {
         tx.from,
       );
       // send data to tx., and tx.from
-      this.socketService.emit(details, tx.to);
-      this.socketService.emit(details, tx.from);
+      this.socketService.emit({ coinSymbol: tx.coinSymbol }, tx.to);
+      this.socketService.emit({ coinSymbol: tx.coinSymbol }, tx.from);
     }
   }
 }

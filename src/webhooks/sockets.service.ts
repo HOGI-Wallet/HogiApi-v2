@@ -10,8 +10,8 @@ export class SocketsService {
   @WebSocketServer()
   private server: Server;
 
-  emit(data: any, address: string) {
-    this.server.emit(address, data);
+  emit(data: any, event: string) {
+    this.server.emit(event, data);
   }
 
   emitTxs(txs: TransactionsEntity[]) {
