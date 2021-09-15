@@ -52,6 +52,35 @@ export class WalletService {
       info.balance,
     );
   }
+
+  async getMyWalletBalanceAndRates(
+    coinSymbol: string,
+    address: string,
+    vs_currency = 'usd',
+  ) {
+    const info = await this.walletModel.findOne({ address, coinSymbol });
+
+    if (!info)
+      throw new UnprocessableEntityException({
+        message: 'wallet info not found in DB',
+      });
+
+    // get conversion rate
+    const coinRate = await this.coinRateService.getCoinRate(
+      coinSymbol,
+      vs_currency,
+    );
+
+    const balanceInOtherCurrency = await this.walletHelper.balanceInOtherCurrency(
+      coinSymbol,
+      coinRate?.rate ?? 1,
+      info.balance,
+    );
+    return {
+      ...balanceInOtherCurrency,
+      ...coinRate,
+    };
+  }
   async addPublicInfo(data: CreatePublicinfoDto) {
     const coin = await this.coinModel
       .findOne({
@@ -92,6 +121,7 @@ export class WalletService {
       //
     }
   }
+
   async getCoinInfo(coinSymbol: string): Promise<CoinEntity> {
     try {
       const coin = await this.coinModel
@@ -106,5 +136,33 @@ export class WalletService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async addPublicInfoForAllCoins(publicinfoData: CreatePublicinfoDto[]) {
+    const coinRates = await this.ratesModel
+      .find({ currencyCode: 'USD' })
+      .lean();
+    let publicInfoDataAdded = [];
+    for (const data of publicinfoData) {
+      await this.addPublicInfo(data);
+      const ratesInfo = await coinRates.find(
+        (coin) => coin.coinSymbol === data.coinSymbol,
+      );
+      const walletInfo = await this.walletModel
+        .findOne({ address: data.address, coinSymbol: data.coinSymbol })
+        .lean();
+      const balance = await this.walletHelper.balanceInOtherCurrency(
+        ratesInfo.coinSymbol,
+        ratesInfo?.rate ?? 1,
+        walletInfo.balance,
+      );
+      publicInfoDataAdded.push({
+        chart_data: {
+          ...ratesInfo,
+        },
+        ...balance,
+      });
+    }
+    return publicInfoDataAdded;
   }
 }

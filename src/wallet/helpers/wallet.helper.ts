@@ -290,13 +290,11 @@ export class WalletHelper {
       coinType === 'isERC20' ||
       coinType === 'isBnb' ||
       coinType === 'isBEP20'
-    )
+    ) {
       _balance = parseFloat(balance);
-    else if (coinType === 'btcLike')
-      // _balance = parseFloat(balance) / Math.pow(10, 8);
+    } else if (coinType === 'btcLike') {
       _balance = parseFloat(balance);
-
-    // balance in vs_currency
+    }
     return {
       balance: _balance,
       vs_currency_balance: _balance * coinRate,

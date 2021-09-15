@@ -34,18 +34,6 @@ export class RatesEntity {
   high24h: number;
 
   @Prop()
-  spark_line_1_day: any[];
-
-  @Prop()
-  spark_line_7_day: any[];
-
-  @Prop()
-  spark_line_30_day: any[];
-
-  @Prop()
-  spark_line_90_day: any[];
-
-  @Prop()
   networkFeeMin: number;
 
   @Prop()
