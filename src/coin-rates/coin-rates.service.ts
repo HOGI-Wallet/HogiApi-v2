@@ -9,19 +9,29 @@ import { RatesHelper } from './helpers/rates.helper';
 import { SocketsService } from '../webhooks/sockets.service';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import moment from 'moment';
+import {
+  SparklinesDocument,
+  SparklinesEntity,
+} from '../entities/sparklines.entity';
 
 @Injectable()
 export class CoinRatesService {
   constructor(
     @InjectModel(RatesEntity.name)
     private readonly ratesModel: Model<RatesDocument>,
+    @InjectModel(SparklinesEntity.name)
+    private readonly sparklinesModel: Model<SparklinesDocument>,
     @InjectModel(CoinEntity.name)
     private readonly coinModel: Model<CoinDocument>,
     @InjectModel(CurrencyEntity.name)
     private readonly currencyModel: Model<CurrencyDocument>,
     private readonly ratesHelper: RatesHelper,
     private readonly socketService: SocketsService,
-  ) {}
+  ) {
+    // this.updateCoinRates();
+    // this.updateSparkLines();
+    // this.updateNetworkFee();
+  }
 
   async getCoinRate(coinSymbol: string, vs_currency: string): Promise<any> {
     try {
@@ -32,13 +42,25 @@ export class CoinRatesService {
         })
         .lean();
       return rate;
-      // const coin = await this.coinModel.findById(rate.coinId).lean();
-      // return {
-      //   ...rate,
-      //   coin,
-      // };
     } catch (e) {
-      // throw new Error("couldn't fetch rates from db");
+      //
+    }
+  }
+
+  async getCoinSparklines(
+    coinSymbol: string,
+    vs_currency: string,
+  ): Promise<any> {
+    try {
+      const rate: RatesEntity = await this.sparklinesModel
+        .findOne({
+          coinSymbol: BlockExplorerUtils.getBCTestCoin(coinSymbol),
+          currencyCode: new RegExp(vs_currency, 'i'),
+        })
+        .lean();
+      return rate;
+    } catch (e) {
+      //
     }
   }
 
@@ -243,9 +265,13 @@ export class CoinRatesService {
             };
 
             /** update */
-            await this.ratesModel.findOneAndUpdate(
-              { coinId: coin._id, currencyId: currency._id },
-              rate,
+            await this.sparklinesModel.findOneAndUpdate(
+              { coinSymbol: coin.coinSymbol, currencyCode: currency.code },
+              {
+                ...rate,
+                coinSymbol: coin.coinSymbol,
+                currencyCode: currency.code,
+              },
               { upsert: true },
             );
           } else {
@@ -265,7 +291,7 @@ export class CoinRatesService {
               coin,
               90,
             );
-            await this.ratesModel.findOneAndUpdate(
+            await this.sparklinesModel.findOneAndUpdate(
               { coinId: coin._id, currencyId: currency._id },
               {
                 spark_line_1_day,

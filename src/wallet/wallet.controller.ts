@@ -87,18 +87,10 @@ export class WalletController {
   }
 
   @Post('publicinfo')
-  async addPublicInfoInDb(@Body() publicinfoData: CreatePublicinfoDto[]) {
-    let publicInfoDataAdded = [];
-    for (const data of publicinfoData) {
-      await this.walletService.addPublicInfo(data);
-      const coinBalance = await this.walletService.getMyWalletBalance(
-        data.coinSymbol,
-        data.address,
-        'usd',
-      );
-      publicInfoDataAdded.push({ ...coinBalance, coinSymbol: data.coinSymbol });
-    }
-    return publicInfoDataAdded;
+  async addPublicInfoForAllCoins(
+    @Body() publicinfoData: CreatePublicinfoDto[],
+  ) {
+    return await this.walletService.addPublicInfoForAllCoins(publicinfoData);
   }
 
   @ApiParam({ name: 'address' })

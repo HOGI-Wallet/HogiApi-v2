@@ -19,6 +19,18 @@ export class CoinRatesController {
     }
   }
 
+  @ApiParam({ name: 'coinSymbol' })
+  @ApiQuery({ name: 'vs_currency' })
+  @Get('sparklines/:coinSymbol')
+  async getCoinSparklines(@Query() query, @Param() param) {
+    if (param.coinSymbol) {
+      return this.coinRatesService.getCoinSparklines(
+        param.coinSymbol,
+        query.vs_currency,
+      );
+    }
+  }
+
   @Get('')
   async getAllCoinRates(@Query() query, @Param() param) {
     return this.coinRatesService.getAllCoinRates(query.vs_currency);
