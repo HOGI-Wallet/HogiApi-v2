@@ -6,7 +6,7 @@ import { WalletModule } from '../wallet/wallet.module';
 import { TransactionHelper } from './helpers/transaction.helper';
 import { TransactionRepo } from './transaction.repo';
 import { InfuraModule } from '../infura/infura.module';
-import { SubmitTransactionValidationPipe } from '../globals/submit-transaction.validation.pipe';
+import { SubmitTransactionValidationPipe } from '../globals/pipes/submit-transaction.validation.pipe';
 import { BlockcypherTransactionMonitor } from './crons/blockcypher-transaction-monitor';
 import { ConfigService } from '../config/config.service';
 import Web3 from 'web3';

@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsMongoId,
   IsNotEmpty,
   IsOptional,
@@ -29,4 +30,8 @@ export class UpdateDappLinkDto {
   @IsString()
   @IsOptional()
   url: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isFeatured: boolean;
 }

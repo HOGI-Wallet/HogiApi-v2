@@ -5,9 +5,9 @@ import {
   PipeTransform,
 } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { SendTransactionDto } from '../transaction/dto/send-transaction.dto';
-import { WalletHelper } from '../wallet/helpers/wallet.helper';
-import { SendInfuraTransactionDto } from '../transaction/dto/send-infura-transaction.dto';
+import { SendTransactionDto } from '../../transaction/dto/send-transaction.dto';
+import { WalletHelper } from '../../wallet/helpers/wallet.helper';
+import { SendInfuraTransactionDto } from '../../transaction/dto/send-infura-transaction.dto';
 import { validate } from 'class-validator';
 
 @Injectable()

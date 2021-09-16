@@ -104,6 +104,6 @@ export class CoinService {
   }
 
   async uploadImage(imageBuffer: Buffer, filename: string) {
-    return this.s3Service.uploadPublicFile(imageBuffer, filename);
+    return this.s3Service.uploadPublicSVGs(imageBuffer, filename);
   }
 }

@@ -13,6 +13,7 @@ import { InfuraModule } from './infura/infura.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AdminModule } from './admin/admin.module';
 import { AddressBookModule } from './address-book/address-book.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AddressBookModule } from './address-book/address-book.module';
     InfuraModule,
     ScheduleModule.forRoot(),
     AdminModule,
+    AuthModule,
     AddressBookModule,
   ],
   controllers: [AppController],
