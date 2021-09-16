@@ -11,7 +11,6 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
-import { AdminAuthGuard } from '../auth/guards/admin.guard';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { DappLinksService } from './dapp-links.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -38,27 +37,22 @@ export class DappLinksController {
     return this.dappLinksService.getSingleDappLink(params.id);
   }
 
-  @UseGuards(AdminAuthGuard)
   @Post('/create')
   createNews(@Body() body: CreateDappLinkDto) {
     return this.dappLinksService.createDappLink(body);
   }
 
-  @UseGuards(AdminAuthGuard)
   @Patch('/update')
   updateNews(@Body() body: UpdateDappLinkDto) {
     return this.dappLinksService.updateDappLink(body);
   }
 
-  @UseGuards(AdminAuthGuard)
   @Delete('/delete/:id')
   deleteNews(@Param() params: DeleteDappLinkDto) {
     return this.dappLinksService.deleteDappLink(params.id);
   }
 
-  @UseGuards(AdminAuthGuard)
   @Post('/upload-image')
-  @UseGuards(AdminAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: File) {
     return this.dappLinksService.uploadImage(file.buffer, file.originalname);

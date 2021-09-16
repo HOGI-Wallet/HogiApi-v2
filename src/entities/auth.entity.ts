@@ -6,10 +6,19 @@ export type AuthDocument = Document & AuthEntity;
 @Schema()
 export class AuthEntity {
   @Prop()
-  username: string;
+  firstName: string;
+
+  @Prop()
+  lastName: string;
+
+  @Prop({ required: true, unique: true })
+  email: string;
 
   @Prop()
   password: string;
+
+  @Prop()
+  role: string;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(AuthEntity);

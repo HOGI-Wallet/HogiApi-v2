@@ -1,9 +1,4 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { CoinController } from './coin/coin.controller';
 import { WalletController } from './wallet/wallet.controller';
 import { CoinService } from './coin/coin.service';
@@ -17,26 +12,14 @@ import { DappLinksController } from './dapp-links/dapp-links.controller';
 import { DappLinksService } from './dapp-links/dapp-links.service';
 
 @Module({
-  imports: [
-    CoinRatesModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        secret: config.jwtSecret,
-        signOptions: { expiresIn: '60d' },
-      }),
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [CoinRatesModule],
   controllers: [
-    AuthController,
     CoinController,
     WalletController,
     NewsController,
     DappLinksController,
   ],
   providers: [
-    AuthService,
     CoinService,
     WalletService,
     WalletHelper,

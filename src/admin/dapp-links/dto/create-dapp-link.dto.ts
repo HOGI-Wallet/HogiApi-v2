@@ -1,4 +1,9 @@
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { S3ImageDto } from '../../../globals/dto/s3-image.dto';
 
@@ -19,4 +24,8 @@ export class CreateDappLinkDto {
   @IsString()
   @IsNotEmpty()
   url: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isFeatured: boolean;
 }

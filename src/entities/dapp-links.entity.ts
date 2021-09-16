@@ -22,6 +22,9 @@ export class DappLinksEntity {
 
   @Prop()
   url: string;
+
+  @Prop()
+  isFeatured: boolean;
 }
 
 export const DappLinksSchema = SchemaFactory.createForClass(DappLinksEntity);
