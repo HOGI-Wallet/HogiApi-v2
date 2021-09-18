@@ -1,4 +1,5 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -22,6 +23,7 @@ export class AuthController {
     return this.authService.login(loginCredentialsDto);
   }
 
+  @UseGuards(AuthGuard())
   @Post('/change-password')
   async changePassword(@Body() body: ChangePasswordDto, @Req() { user }) {
     return this.authService.changePassword(
