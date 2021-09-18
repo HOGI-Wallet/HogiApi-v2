@@ -58,10 +58,12 @@ export class TransactionHelper {
       to: toAddress,
       txId: tx.hash,
       blockHeight: tx.block_height,
-      amount: String(
-        tx.outputs.find((out) => out?.addresses.includes(toAddress))?.value /
-          Math.pow(10, 8),
-      ), //assuming p2pkh transaction from (and output consist one output)
+      //assuming p2pkh transaction from (and output consist one output)
+      // amount: String(
+      //   tx.outputs.find((out) => out?.addresses.includes(toAddress))?.value /
+      //     Math.pow(10, 8),
+      // ),
+      amount: String(tx.outputs[0]?.value / Math.pow(10, 8)),
     };
   }
 

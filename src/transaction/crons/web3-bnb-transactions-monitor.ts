@@ -26,7 +26,7 @@ export class Web3BnbTransactionsMonitor {
     private readonly socketService: SocketsService,
     private readonly bscScanService: BscScanService,
   ) {
-    // this.monitorBnbTx();
+    this.monitorBnbTx();
   }
   @Cron(CronExpression.EVERY_5_MINUTES)
   async monitorBnbTx() {
