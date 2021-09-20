@@ -278,15 +278,14 @@ export class WalletCore {
     validAddress: WalletInterface | null,
     accountIndex = 0,
   ) {
-    if (coin.isErc20) {
-      coin.coinSymbol = 'eth';
-    }
-    if (coin.isBep20) {
-      coin.coinSymbol = 'bnb';
-    }
     if (iteration <= 0) return validAddress;
 
-    const newAddress = await this.createAddress(coin, accountIndex, mnemonic);
+    let symbol = coin.coinSymbol;
+    if (coin.isErc20 || coin.isBep20 || coin.coinSymbol === 'bnb') {
+      symbol = 'eth';
+    }
+
+    const newAddress = await WalletCore.createHdWallet(symbol, mnemonic);
     const isValidAddress = await this.checkValidAddress(
       coin,
       newAddress.address,
