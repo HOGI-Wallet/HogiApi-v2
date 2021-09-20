@@ -33,7 +33,7 @@ phases:
       - npm install --global yarn
       - npm install -g @nestjs/cli
       - yarn install
-      - aws ecr get-login-password  --region us-west-2 --no-include-email
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 107006037118.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
       - npm install --save @nestjs/swagger fastify-swagger
