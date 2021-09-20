@@ -29,7 +29,6 @@ phases:
   install:
     runtime-versions:
       nodejs: latest
-      docker: 19
     commands:
       - npm install --global yarn
       - npm install -g @nestjs/cli
