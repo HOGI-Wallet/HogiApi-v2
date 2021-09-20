@@ -28,8 +28,8 @@ env:
 phases:
   install:
     runtime-versions:
+      docker: 18
       nodejs: latest
-      docker: 19
     commands:
       - npm install --global yarn
       - npm install -g @nestjs/cli
