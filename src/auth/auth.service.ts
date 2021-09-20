@@ -103,7 +103,7 @@ export class AuthService {
   }
 
   async getAllUsers() {
-    return this.authModel.find({ role: 'manager' });
+    return this.authModel.find({ role: 'manager' }, { password: 0 }).lean();
   }
 
   async deleteUser(id: string) {
