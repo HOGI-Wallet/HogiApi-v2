@@ -9,7 +9,7 @@ import {
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './jwt-payload.interface';
+import { JwtPayload } from './guards/jwt-payload.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthDocument, AuthEntity } from '../entities/auth.entity';
 import { Model } from 'mongoose';
@@ -57,11 +57,11 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = {
         firstName: user.firstName,
-        lastName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         role: user.role,
       };
-      const accessToken: string = await this.jwtService.sign(payload);
+      const accessToken: string = await this.jwtService.sign({ user: payload });
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your login credentials');
@@ -100,5 +100,13 @@ export class AuthService {
     } catch (e) {
       throw e;
     }
+  }
+
+  async getAllUsers() {
+    return this.authModel.find({ role: 'manager' });
+  }
+
+  async deleteUser(id: string) {
+    return this.authModel.findOneAndDelete({ _id: id });
   }
 }

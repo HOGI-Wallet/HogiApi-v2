@@ -3,9 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { InjectModel } from '@nestjs/mongoose';
-import { AuthDocument, AuthEntity } from '../entities/auth.entity';
+import { AuthDocument, AuthEntity } from '../../entities/auth.entity';
 import { Model } from 'mongoose';
-import { ConfigService } from '../config/config.service';
+import { ConfigService } from '../../config/config.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -21,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
+    console.log('payload', payload);
     const { email } = payload;
     const user = await this.authModel.findOne({ email });
 

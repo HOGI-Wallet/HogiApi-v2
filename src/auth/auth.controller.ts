@@ -1,9 +1,18 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UseGuards,
+  Get,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
 
 @ApiTags('Auth')
@@ -23,7 +32,6 @@ export class AuthController {
     return this.authService.login(loginCredentialsDto);
   }
 
-  @UseGuards(AuthGuard())
   @Post('/change-password')
   async changePassword(@Body() body: ChangePasswordDto, @Req() { user }) {
     return this.authService.changePassword(
@@ -31,5 +39,16 @@ export class AuthController {
       body.newPassword,
       body.oldPassword,
     );
+  }
+
+  @Get('/all-users')
+  async getAllUsers() {
+    return this.authService.getAllUsers();
+  }
+
+  @ApiParam({ name: 'id' })
+  @Delete('/delete-user/:id')
+  async deleteUser(@Param() params) {
+    return this.authService.deleteUser(params.id);
   }
 }
