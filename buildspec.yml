@@ -28,7 +28,7 @@ env:
 phases:
   install:
     runtime-versions:
-      docker: 18
+      docker: latest
       nodejs: latest
     commands:
       - npm install --global yarn
