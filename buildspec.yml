@@ -26,24 +26,17 @@ env:
     AWS_BUCKET: "cryptokara-storage"
     AWS_REGION: "us-east-2"
 phases:
-  install:
-    runtime-versions:
-      nodejs: latest
+
+  pre_build:
     commands:
-      - npm install --global yarn
-      - npm install -g @nestjs/cli
-      - yarn install
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 107006037118.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
-      - npm install --save @nestjs/swagger fastify-swagger
-      - yarn build
+      - docker build -t cryptokara .
+      -  docker tag cryptokara:v1.1 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
   post_build:
     commands:
-      - cp -R node_modules/ dist/node_modules
-      - cp Procfile dist/Procfile
-      - cp -R .ebextensions dist/.ebextensions
+      - docker push 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
+      -  printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazoneaws.com/$IMAGE_REPO_NAME$IMAGE_TAG > imagedefinitions.json
 artifacts:
-  files:
-    - "**/*"
-  discard-paths: no
-  base-directory: dist
+  files: imagedefinitions.json
