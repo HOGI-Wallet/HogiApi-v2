@@ -40,11 +40,8 @@ export class WalletController {
     /** coin info */
     const coin = await this.walletService.getCoinInfo(body.coinSymbol);
     let symbol = body.coinSymbol;
-    if (coin.isErc20) {
+    if (coin.isErc20 || coin.isBep20 || coin.coinSymbol === 'bnb') {
       symbol = 'eth';
-    }
-    if (coin.isBep20) {
-      symbol = 'bnb';
     }
     if (!body.recovery) {
       try {

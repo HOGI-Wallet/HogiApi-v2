@@ -83,7 +83,10 @@ export class SyncBnbTransactions {
    */
   async syncTrxsWithDb(trxs: TransactionsEntity[]) {
     const dbPromises = [];
-    for (const tx of trxs) {
+    const filteredTrx = trxs.filter((trx: TransactionsEntity) => {
+      return String(trx.amount) !== '0';
+    });
+    for (const tx of filteredTrx) {
       dbPromises.push(
         this.transactionModel.update({ txId: tx.txId }, tx, {
           upsert: true,
