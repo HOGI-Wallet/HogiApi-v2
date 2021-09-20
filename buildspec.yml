@@ -29,21 +29,24 @@ phases:
   install:
     runtime-versions:
       nodejs: latest
+      docker: 19
     commands:
       - npm install --global yarn
       - npm install -g @nestjs/cli
       - yarn install
+      -  $(aws ecr get-login --noe-include-email --region $AWS_DEFAULT_REGION)
   build:
     commands:
       - npm install --save @nestjs/swagger fastify-swagger
       - yarn build
+      -  docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      -  docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazoneaws.com/$IMAGE_REPO_NAME$IMAGE_TAG
   post_build:
     commands:
       - cp -R node_modules/ dist/node_modules
       - cp Procfile dist/Procfile
       - cp -R .ebextensions dist/.ebextensions
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazoneaws/$IMAGE_REPO/$IMAGE_TAG
+      -  printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazoneaws.com/$IMAGE_REPO_NAME$IMAGE_TAG > imagedefinitions.json
 artifacts:
-  files:
-    - "**/*"
-  discard-paths: no
-  base-directory: dist
+  files: imagedefinitions.json
