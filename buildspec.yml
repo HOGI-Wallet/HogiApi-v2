@@ -34,7 +34,7 @@ phases:
       - npm install --global yarn
       - npm install -g @nestjs/cli
       - yarn install
-      -  $(aws ecr get-login --noe-include-email --region $AWS_DEFAULT_REGION)
+      -  $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   build:
     commands:
       - npm install --save @nestjs/swagger fastify-swagger
