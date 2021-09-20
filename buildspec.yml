@@ -34,7 +34,7 @@ phases:
   build:
     commands:
       - docker build -t cryptokara .
-      -  docker tag cryptokara:v1.1 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
+      - docker tag cryptokara:latest 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
   post_build:
     commands:
       - docker push 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
