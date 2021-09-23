@@ -14,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AdminModule } from './admin/admin.module';
 import { AddressBookModule } from './address-book/address-book.module';
 import { AuthModule } from './auth/auth.module';
+import { MoralisModule } from './moralis/moralis.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
     AdminModule,
     AuthModule,
     AddressBookModule,
+    MoralisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
