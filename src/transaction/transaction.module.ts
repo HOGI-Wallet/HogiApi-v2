@@ -47,6 +47,6 @@ import { Web3BnbTransactionsMonitor } from './crons/web3-bnb-transactions-monito
       inject: [ConfigService],
     },
   ],
-  exports: [TransactionHelper, EtherScanService],
+  exports: [TransactionHelper, BscScanService, EtherScanService],
 })
 export class TransactionModule {}

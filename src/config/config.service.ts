@@ -54,6 +54,9 @@ export class ConfigService {
       AWS_SECRET_KEY: Joi.string().required(),
       AWS_BUCKET: Joi.string().required(),
       AWS_REGION: Joi.string().required(),
+
+      MORALIS_APP_ID: Joi.string().required(),
+      MORALIS_SERVER_URL: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(
@@ -149,5 +152,13 @@ export class ConfigService {
 
   get awsBucket(): string {
     return this.envConfig.AWS_BUCKET;
+  }
+
+  get moralisAppId(): string {
+    return this.envConfig.MORALIS_APP_ID;
+  }
+
+  get moralisServerUrl(): string {
+    return this.envConfig.MORALIS_SERVER_URL;
   }
 }

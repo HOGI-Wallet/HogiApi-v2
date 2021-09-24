@@ -13,6 +13,7 @@ import { EtherScanService } from '../transaction/etherscan.service';
 import { ConfigModule } from '../config/config.module';
 import { BscScanService } from '../transaction/bscscan.service';
 import { CoinRatesService } from '../coin-rates/coin-rates.service';
+import { MoralisService } from '../moralis/moralis.service';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CoinRatesService } from '../coin-rates/coin-rates.service';
     WalletService,
     EtherScanService,
     BscScanService,
+    MoralisService,
     {
       provide: 'Web3',
       useFactory: (config: ConfigService) => {
