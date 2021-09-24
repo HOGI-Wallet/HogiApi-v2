@@ -332,6 +332,7 @@ export class CoinRatesService {
             coinSymbol: coin.coinSymbol,
             coinId: coin._id,
             currencyId: currency._id,
+            currencyCode: currency.code,
           },
           fee,
           { upsert: true },
