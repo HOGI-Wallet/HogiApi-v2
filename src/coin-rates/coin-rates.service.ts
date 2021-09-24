@@ -28,9 +28,9 @@ export class CoinRatesService {
     private readonly ratesHelper: RatesHelper,
     private readonly socketService: SocketsService,
   ) {
-    // this.updateCoinRates();
-    // this.updateSparkLines();
-    // this.updateNetworkFee();
+    this.updateCoinRates();
+    this.updateSparkLines();
+    this.updateNetworkFee();
   }
 
   async getCoinRate(coinSymbol: string, vs_currency: string): Promise<any> {
@@ -328,7 +328,11 @@ export class CoinRatesService {
 
       for (const currency of currencies) {
         const updatedRate = await this.ratesModel.findOneAndUpdate(
-          { coinId: coin._id, currencyId: currency._id },
+          {
+            coinSymbol: coin.coinSymbol,
+            coinId: coin._id,
+            currencyId: currency._id,
+          },
           fee,
           { upsert: true },
         );
