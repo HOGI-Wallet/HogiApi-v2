@@ -71,4 +71,12 @@ export class MoralisController {
     );
     this.socket.emit({ coinSymbol: 'eth' }, body.object.to_address);
   }
+
+  @Post('/token')
+  async tokenWebhook(@Body() body) {
+    const { coinSymbol, address } = await this.moralisService.tokenWebhook(
+      body.object,
+    );
+    this.socket.emit({ coinSymbol }, address);
+  }
 }

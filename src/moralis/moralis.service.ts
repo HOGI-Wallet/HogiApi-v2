@@ -6,8 +6,11 @@ import {
   TransactionsEntity,
 } from '../entities/transactions.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Promise } from 'mongoose';
 import { WalletEntity, WalletModel } from '../entities/wallet.entity';
+import { CoinDocument, CoinEntity } from '../entities/coin.entity';
+import { BscScanService } from '../transaction/bscscan.service';
+import { EtherScanService } from '../transaction/etherscan.service';
 
 @Injectable()
 export class MoralisService {
@@ -17,6 +20,10 @@ export class MoralisService {
     private readonly transactionModel: Model<TransactionsDocument>,
     @InjectModel(WalletEntity.name)
     private readonly walletModel: WalletModel,
+    @InjectModel(CoinEntity.name)
+    private readonly coinModel: Model<CoinDocument>,
+    private readonly bscscanService: BscScanService,
+    private readonly etherscanService: EtherScanService,
   ) {}
 
   async watchBscAddress(address: string) {
@@ -86,5 +93,59 @@ export class MoralisService {
 
   async updateBalance(address: string, balance: string, coinSymbol: string) {
     await this.walletModel.updateAddressBalance(address, balance, coinSymbol);
+  }
+
+  async syncTrxsWithDb(trxs: TransactionsEntity[]) {
+    const dbPromises = [];
+    const filteredTrx = trxs.filter((trx: TransactionsEntity) => {
+      return String(trx.amount) !== '0';
+    });
+    for (const tx of filteredTrx) {
+      dbPromises.push(
+        this.transactionModel.update({ txId: tx.txId }, tx, {
+          upsert: true,
+        }),
+      );
+    }
+    const txs = await Promise.all(dbPromises);
+    return txs;
+  }
+
+  async tokenWebhook(trx: any) {
+    const coin: CoinEntity = await this.coinModel
+      .findOne({ contractAddress: trx.token_address })
+      .lean();
+    // console.log('coin in tokenWebhook =>', coin);
+    const balance = String(trx.balance / Math.pow(10, coin.decimal ?? 18));
+    // console.log('balance in tokenWebhook =>', balance);
+    await this.updateBalance(trx.address, balance, coin.coinSymbol);
+    if (coin.coinSymbol === 'bnb' || coin.isBep20 === true) {
+      const trxs = await this.bscscanService.getBEP20Txs(
+        trx.address,
+        coin.contractAddress,
+      );
+      const transformedTrxs = await this.bscscanService.transformTxs(
+        trxs,
+        trx.address,
+        coin,
+      );
+      await this.syncTrxsWithDb(transformedTrxs);
+    }
+    if (coin.coinSymbol === 'eth' || coin.isErc20 === true) {
+      const trxs = await this.etherscanService.getERC20Txs(
+        trx.address,
+        coin.contractAddress,
+      );
+      const transformedTrxs = await this.etherscanService.transformTxs(
+        trxs,
+        trx.address,
+        coin,
+      );
+      await this.syncTrxsWithDb(transformedTrxs);
+    }
+    return {
+      coinSymbol: coin.coinSymbol,
+      address: trx.address,
+    };
   }
 }
