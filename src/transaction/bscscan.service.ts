@@ -26,13 +26,13 @@ export class BscScanService {
 
       /** handling rate limit here */
       if (response.message && response.message !== 'OK') {
-        console.log(
-          'error occured in bscscan get API at : ',
-          context,
-          url,
-          response.message,
-          response.result,
-        );
+        // console.log(
+        //   'error occured in bscscan get API at : ',
+        //   context,
+        //   url,
+        //   response.message,
+        //   response.result,
+        // );
         delay(5);
         return;
       }

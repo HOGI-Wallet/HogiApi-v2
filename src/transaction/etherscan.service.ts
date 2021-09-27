@@ -26,13 +26,13 @@ export class EtherScanService {
 
       /** handling rate limit here */
       if (response.message && response.message !== 'OK') {
-        console.log(
-          'error occured in etherscan get API at : ',
-          context,
-          url,
-          response.message,
-          response.result,
-        );
+        // console.log(
+        //   'error occured in etherscan get API at : ',
+        //   context,
+        //   url,
+        //   response.message,
+        //   response.result,
+        // );
         delay(5);
         return;
       }
