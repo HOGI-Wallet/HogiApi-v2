@@ -88,7 +88,7 @@ export class SyncBnbTransactions {
     });
     for (const tx of filteredTrx) {
       dbPromises.push(
-        this.transactionModel.update({ txId: tx.txId }, tx, {
+        this.transactionModel.updateOne({ txId: tx.txId }, tx, {
           upsert: true,
         }),
       );
