@@ -26,7 +26,7 @@ export class MoralisController {
     const tx = await this.moralisService.transformBscTx(body, 'bnb');
     await this.moralisService.createTX(tx);
 
-    // console.log('bnb trx =>', tx);
+    console.log('bnb trx from moralis =>', body.object);
 
     /** update balance in db */
     const balance = await this.bscscanService.getBalance([
@@ -54,7 +54,7 @@ export class MoralisController {
     const tx = await this.moralisService.transformEthTx(body, 'eth');
     await this.moralisService.createTX(tx);
 
-    // console.log('eth trx =>', tx);
+    console.log('eth trx from moralis =>', body.object);
 
     /** update balance in db */
     const balance = await this.etherscanService.getBalance([
@@ -75,14 +75,15 @@ export class MoralisController {
 
   @Post('/token')
   async tokenWebhook(@Body() body) {
+    console.log('token from moralis =>', body.object);
     const { coinSymbol, address } = await this.moralisService.tokenWebhook(
       body.object,
     );
     this.socket.emit({ coinSymbol }, address);
   }
 
-  @Post('/sync-moralis-with-db')
-  async syncMoralisWithDb(@Body() body: SyncMoralisWithDbDto) {
-    return await this.moralisService.syncMoralisWithDb(body.update);
-  }
+  // @Post('/sync-moralis-with-db')
+  // async syncMoralisWithDb(@Body() body: SyncMoralisWithDbDto) {
+  //   return await this.moralisService.syncMoralisWithDb(body.update);
+  // }
 }
