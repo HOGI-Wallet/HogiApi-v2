@@ -19,7 +19,7 @@ export class MoralisController {
 
   @Post('/bsc')
   async bscWebhooks(@Body() body) {
-    console.log('got binance webhook!');
+    // console.log('got binance webhook!');
     /** create tx in db
      * presumption: hooks is register for every address. if tx.outputs contains other address, safely ignore them
      */
@@ -47,7 +47,7 @@ export class MoralisController {
 
   @Post('/eth')
   async ethWebhooks(@Body() body) {
-    console.log('got ethereum webhook!');
+    // console.log('got ethereum webhook!');
     /** create tx in db
      * presumption: hooks is register for every address. if tx.outputs contains other address, safely ignore them
      */
@@ -75,7 +75,7 @@ export class MoralisController {
 
   @Post('/token')
   async tokenWebhook(@Body() body) {
-    console.log('token from moralis =>', body.object);
+    console.log('token balance from moralis =>', body.object);
     const { coinSymbol, address } = await this.moralisService.tokenWebhook(
       body.object,
     );
