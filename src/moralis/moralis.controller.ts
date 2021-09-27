@@ -5,6 +5,7 @@ import { BscScanService } from '../transaction/bscscan.service';
 import { EtherScanService } from '../transaction/etherscan.service';
 import { SocketsService } from '../webhooks/sockets.service';
 import Web3 from 'web3';
+import { SyncMoralisWithDbDto } from './dto/sync-moralis-with-db.dto';
 
 @ApiTags('Moralis')
 @Controller('moralis')
@@ -78,5 +79,10 @@ export class MoralisController {
       body.object,
     );
     this.socket.emit({ coinSymbol }, address);
+  }
+
+  @Post('/sync-moralis-with-db')
+  async syncMoralisWithDb(@Body() body: SyncMoralisWithDbDto) {
+    return await this.moralisService.syncMoralisWithDb(body.update);
   }
 }

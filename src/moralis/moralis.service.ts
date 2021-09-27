@@ -102,7 +102,7 @@ export class MoralisService {
     });
     for (const tx of filteredTrx) {
       dbPromises.push(
-        this.transactionModel.update({ txId: tx.txId }, tx, {
+        this.transactionModel.findOneAndUpdate({ txId: tx.txId }, tx, {
           upsert: true,
         }),
       );
@@ -147,5 +147,21 @@ export class MoralisService {
       coinSymbol: coin.coinSymbol,
       address: trx.address,
     };
+  }
+
+  async syncMoralisWithDb(update: boolean) {
+    if (update) {
+      const wallets: WalletEntity[] = await this.walletModel.find().lean();
+      await wallets.map(async (wallet) => {
+        if (wallet.coinSymbol === 'eth' || wallet.isERC20 === true) {
+          await this.watchEthAddress(wallet.address);
+        }
+        if (wallet.coinSymbol === 'bnb' || wallet.isBEP20 === true) {
+          await this.watchBscAddress(wallet.address);
+        }
+      });
+
+      return 'wallets synced with moralis!';
+    }
   }
 }
