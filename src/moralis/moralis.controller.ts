@@ -75,7 +75,7 @@ export class MoralisController {
 
   @Post('/token')
   async tokenWebhook(@Body() body) {
-    console.log('token from moralis =>', body.object);
+    console.log('token balance from moralis =>', body.object);
     const { coinSymbol, address } = await this.moralisService.tokenWebhook(
       body.object,
     );
