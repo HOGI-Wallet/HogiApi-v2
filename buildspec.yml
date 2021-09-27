@@ -30,14 +30,14 @@ phases:
   pre_build:
     commands:
       - docker login -u $dockerhub_username -p $dockerhub_password
-      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 107006037118.dkr.ecr.us-west-2.amazonaws.com
+      - aws ecr get-login-password --region $AWS_REGION  | docker login --username AWS --password-stdin 107006037118.dkr.ecr.$AWS_REGION.amazonaws.com
   build:
     commands:
       - docker build -t cryptokara .
-      - docker tag cryptokara:latest 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
+      - docker tag $AWS_ECR:latest 107006037118.dkr.ecr.us-west-2.amazonaws.com/$AWS_ECR:$TAG
   post_build:
     commands:
-      - docker push 107006037118.dkr.ecr.us-west-2.amazonaws.com/cryptokara:v1.1
-      -  printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazoneaws.com/$IMAGE_REPO_NAME$IMAGE_TAG > imagedefinitions.json
+      - docker push 107006037118.dkr.ecr.us-west-2.amazonaws.com/$AWS_ECR:$TAG
+      -  printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazoneaws.com/$AWS_ECR:$TAG > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
