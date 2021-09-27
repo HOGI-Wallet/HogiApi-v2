@@ -26,7 +26,7 @@ export class MoralisController {
     const tx = await this.moralisService.transformBscTx(body, 'bnb');
     await this.moralisService.createTX(tx);
 
-    console.log('bnb trx =>', tx);
+    // console.log('bnb trx =>', tx);
 
     /** update balance in db */
     const balance = await this.bscscanService.getBalance([
@@ -54,7 +54,7 @@ export class MoralisController {
     const tx = await this.moralisService.transformEthTx(body, 'eth');
     await this.moralisService.createTX(tx);
 
-    console.log('eth trx =>', tx);
+    // console.log('eth trx =>', tx);
 
     /** update balance in db */
     const balance = await this.etherscanService.getBalance([

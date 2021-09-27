@@ -80,12 +80,14 @@ export class MoralisService {
 
   async createTX(tx) {
     try {
-      return await this.transactionModel
-        .findOneAndUpdate({ txId: tx.txId }, tx, {
-          upsert: true,
-          new: true,
-        })
-        .lean();
+      if (String(tx.amount) !== '0') {
+        return await this.transactionModel
+          .findOneAndUpdate({ txId: tx.txId }, tx, {
+            upsert: true,
+            new: true,
+          })
+          .lean();
+      }
     } catch (e) {
       throw new Error("couldn't create tx in DB");
     }
