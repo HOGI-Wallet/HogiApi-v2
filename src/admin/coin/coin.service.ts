@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  Post,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,6 +11,7 @@ import { UpdateCoinDto } from './dto/update-coin.dto';
 import { CreateCoinDto } from './dto/create-coin.dto';
 import { CoinRatesService } from '../../coin-rates/coin-rates.service';
 import { S3Service } from '../../globals/services/s3.service';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Injectable()
 export class CoinService {
@@ -103,6 +105,7 @@ export class CoinService {
     const networkFee = await this.coinRatesService.updateNetworkFee([coin]);
   }
 
+  @Post('/upload-image')
   async uploadImage(imageBuffer: Buffer, filename: string) {
     return this.s3Service.uploadPublicFile(imageBuffer, filename);
   }

@@ -11,7 +11,7 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { NewsService } from './news.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
@@ -53,6 +53,18 @@ export class NewsController {
     return this.newsService.deleteNews(params.id);
   }
 
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @Post('/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: File) {

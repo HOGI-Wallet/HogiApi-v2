@@ -9,6 +9,7 @@ import { WalletDocument, WalletEntity } from '../entities/wallet.entity';
 import { WalletHelper } from './helpers/wallet.helper';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { RatesDocument, RatesEntity } from '../entities/rates.entity';
+import { MoralisService } from '../moralis/moralis.service';
 
 @Injectable()
 export class WalletService {
@@ -22,6 +23,7 @@ export class WalletService {
     @InjectModel(WalletEntity.name)
     private readonly walletModel: Model<WalletDocument>,
     private readonly walletHelper: WalletHelper,
+    private readonly moralisService: MoralisService,
   ) {}
 
   async getMyWalletBalance(
@@ -115,6 +117,12 @@ export class WalletService {
           data.address,
           coin.coinSymbol,
         );
+      }
+      if (coinType === 'isEth' || coinType === 'isERC20') {
+        await this.moralisService.watchEthAddress(data.address);
+      }
+      if (coinType === 'isBnb' || coinType === 'isBEP20') {
+        await this.moralisService.watchBscAddress(data.address);
       }
       return { ...walletAdded, isErc20: coin.isErc20 };
     } catch (e) {

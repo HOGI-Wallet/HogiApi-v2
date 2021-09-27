@@ -11,7 +11,7 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DappLinksService } from './dapp-links.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
@@ -52,6 +52,19 @@ export class DappLinksController {
     return this.dappLinksService.deleteDappLink(params.id);
   }
 
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @Post('/upload-image')
   @Post('/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: File) {

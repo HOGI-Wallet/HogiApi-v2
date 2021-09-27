@@ -28,9 +28,9 @@ export class CoinRatesService {
     private readonly ratesHelper: RatesHelper,
     private readonly socketService: SocketsService,
   ) {
-    this.updateCoinRates();
-    this.updateSparkLines();
-    this.updateNetworkFee();
+    // this.updateCoinRates();
+    // this.updateSparkLines();
+    // this.updateNetworkFee();
   }
 
   async getCoinRate(coinSymbol: string, vs_currency: string): Promise<any> {
