@@ -117,9 +117,9 @@ export class MoralisService {
     const coin: CoinEntity = await this.coinModel
       .findOne({ contractAddress: trx.token_address })
       .lean();
-    console.log('coin in tokenWebhook =>', coin);
+    // console.log('coin in tokenWebhook =>', coin);
     const balance = String(trx.balance / Math.pow(10, coin?.decimal ?? 18));
-    console.log('balance in tokenWebhook =>', balance);
+    // console.log('balance in tokenWebhook =>', balance);
     await this.updateBalance(trx.address, balance, coin.coinSymbol);
     if (coin.coinSymbol === 'bnb' || coin.isBep20 === true) {
       const trxs = await this.bscscanService.getBEP20Txs(

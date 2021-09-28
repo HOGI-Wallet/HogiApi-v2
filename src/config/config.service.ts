@@ -118,16 +118,16 @@ export class ConfigService {
     return this.envConfig.ETHERSCAN_API_KEY;
   }
 
+  get bscScanApiKey(): string {
+    return this.envConfig.BSCSCAN_API_KEY;
+  }
+
   get etherScanExplorerUrl(): string {
     return this.envConfig.ETHERSCAN_EXPLORER_URL;
   }
 
   get bscScanApiUrl(): string {
     return this.envConfig.BSCSCAN_API_URL;
-  }
-
-  get bscScanApiKey(): string {
-    return this.envConfig.BSCSCAN_API_KEY;
   }
 
   get bscScanExplorerUrl(): string {
