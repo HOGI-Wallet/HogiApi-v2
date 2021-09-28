@@ -25,6 +25,8 @@ export class WalletHelper {
     private readonly http: HttpService,
     @Inject('Web3')
     private readonly web3: Web3,
+    @Inject('BinanceWeb3')
+    private readonly binanceWeb3: Web3,
     private readonly config: ConfigService,
     private readonly etherScanService: EtherScanService,
     private readonly bscScanService: BscScanService,
@@ -197,7 +199,7 @@ export class WalletHelper {
     try {
       // get balance from infura
       if (coinSymbol === 'eth') {
-        const balance = await this.web3.eth.getBalance(address);
+        const balance = await this.getEthBalanceRpc(address);
         await this.walletModel.updateAddressBalance(
           this.web3.utils.toChecksumAddress(address.toLowerCase()),
           this.web3.utils.fromWei(balance, 'ether'),
@@ -217,18 +219,15 @@ export class WalletHelper {
       const coin: CoinEntity = await this.coinModel.findOne({
         coinSymbol: new RegExp('^' + coinSymbol + '$', 'i'),
       });
-      const contract = new this.web3.eth.Contract(
+      const balance = await this.getERC20BalanceRpc(
         coin.contractAbi,
         coin.contractAddress,
-      );
-      const balance = await this.etherScanService.getERC20Balance(
         address,
-        coin.contractAddress,
       );
 
       await this.walletModel.updateCoinBalance(
         this.web3.utils.toChecksumAddress(address.toLowerCase()),
-        `${balance / Math.pow(10, coin.decimal ?? 18)}`,
+        `${Number(balance) / Math.pow(10, coin.decimal ?? 18)}`,
         coinSymbol,
       );
     } catch (e) {
@@ -238,9 +237,9 @@ export class WalletHelper {
 
   async updateBnbLikeWalletsBalance(address: string, coinSymbol: string) {
     try {
-      // get balance from infura
+      // get balance from binance data seed
       if (coinSymbol === 'bnb') {
-        const balance = await this.web3.eth.getBalance(address);
+        const balance = await this.getBscBalanceRpc(address);
         await this.walletModel.updateAddressBalance(
           this.web3.utils.toChecksumAddress(address.toLowerCase()),
           this.web3.utils.fromWei(balance, 'ether'),
@@ -259,18 +258,15 @@ export class WalletHelper {
       const coin: CoinEntity = await this.coinModel.findOne({
         coinSymbol: new RegExp('^' + coinSymbol + '$', 'i'),
       });
-      const contract = new this.web3.eth.Contract(
+      const balance = await this.getBEP20BalanceRpc(
         coin.contractAbi,
         coin.contractAddress,
-      );
-      const balance = await this.bscScanService.getBEP20Balance(
         address,
-        coin.contractAddress,
       );
 
       await this.walletModel.updateCoinBalance(
         this.web3.utils.toChecksumAddress(address.toLowerCase()),
-        `${balance / Math.pow(10, coin.decimal ?? 18)}`,
+        `${Number(balance) / Math.pow(10, coin.decimal ?? 18)}`,
         coinSymbol,
       );
     } catch (e) {
@@ -305,21 +301,33 @@ export class WalletHelper {
     try {
       const coinType = await this.getCoinType(coin);
       if (coinType === 'isEth') {
-        const ethBalance = await this.checkEtherBalance(address);
+        // const ethBalance = await this.checkEtherBalance(address);
+        const ethBalance = await this.getEthBalanceRpc(address);
         return this.web3.utils.fromWei(ethBalance, 'ether').toString();
       } else if (coinType === 'isERC20') {
-        const erc20Balance = await this.getErc20TokenBalance(
+        // const erc20Balance = await this.getErc20TokenBalance(
+        //   coin.contractAddress,
+        //   address,
+        // );
+        const erc20Balance = await this.getERC20BalanceRpc(
+          coin.contractAbi,
           coin.contractAddress,
           address,
         );
         return this.web3.utils.fromWei(erc20Balance, 'ether').toString();
       } else if (coinType === 'isBnb') {
-        console.log('checking bnb balance on bscscan');
-        const bnbBalance = await this.checkBnbBalance(address);
+        // console.log('checking bnb balance on bscscan');
+        // const bnbBalance = await this.checkBnbBalance(address);
+        const bnbBalance = await this.getBscBalanceRpc(address);
         return this.web3.utils.fromWei(bnbBalance, 'ether').toString();
       } else if (coinType === 'isBEP20') {
-        console.log('checking bep20 balance on bscscan');
-        const bep20Balance = await this.getBep20TokenBalance(
+        // console.log('checking bep20 balance on bscscan');
+        // const bep20Balance = await this.getBep20TokenBalance(
+        //   coin.contractAddress,
+        //   address,
+        // );
+        const bep20Balance = await this.getBEP20BalanceRpc(
+          coin.contractAbi,
           coin.contractAddress,
           address,
         );
@@ -357,5 +365,30 @@ export class WalletHelper {
     } else {
       return symbol + '/main';
     }
+  }
+
+  async getEthBalanceRpc(walletAddress) {
+    const balance = await this.web3.eth.getBalance(walletAddress);
+    return String(balance);
+  }
+
+  async getERC20BalanceRpc(tokenABI, contractAddress, walletAddress) {
+    const contract = new this.web3.eth.Contract(tokenABI, contractAddress);
+    const balance = await contract.methods.balanceOf(walletAddress).call();
+    return String(balance);
+  }
+
+  async getBscBalanceRpc(walletAddress) {
+    const balance = await this.binanceWeb3.eth.getBalance(walletAddress);
+    return String(balance);
+  }
+
+  async getBEP20BalanceRpc(tokenABI, contractAddress, walletAddress) {
+    const contract = new this.binanceWeb3.eth.Contract(
+      tokenABI,
+      contractAddress,
+    );
+    const balance = await contract.methods.balanceOf(walletAddress).call();
+    return String(balance);
   }
 }
