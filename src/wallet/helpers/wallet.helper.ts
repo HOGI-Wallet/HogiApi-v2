@@ -314,7 +314,7 @@ export class WalletHelper {
           coin.contractAddress,
           address,
         );
-        return this.web3.utils.fromWei(erc20Balance, 'ether').toString();
+        return `${Number(erc20Balance) / Math.pow(10, coin.decimal ?? 18)}`;
       } else if (coinType === 'isBnb') {
         // console.log('checking bnb balance on bscscan');
         // const bnbBalance = await this.checkBnbBalance(address);
@@ -331,7 +331,7 @@ export class WalletHelper {
           coin.contractAddress,
           address,
         );
-        return this.web3.utils.fromWei(bep20Balance, 'ether').toString();
+        return `${Number(bep20Balance) / Math.pow(10, coin.decimal ?? 18)}`;
       } else {
         const altcoinBalance = await this.blockcypherService.getBalance(
           coin.coinSymbol,
