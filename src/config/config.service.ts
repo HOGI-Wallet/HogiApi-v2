@@ -57,6 +57,7 @@ export class ConfigService {
 
       MORALIS_APP_ID: Joi.string().required(),
       MORALIS_SERVER_URL: Joi.string().required(),
+      BINANCE_RPC_URL: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(
@@ -160,5 +161,9 @@ export class ConfigService {
 
   get moralisServerUrl(): string {
     return this.envConfig.MORALIS_SERVER_URL;
+  }
+
+  get binanceRpcUrl(): string {
+    return this.envConfig.BINANCE_RPC_URL;
   }
 }

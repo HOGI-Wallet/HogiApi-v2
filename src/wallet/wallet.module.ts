@@ -37,6 +37,13 @@ import { MoralisService } from '../moralis/moralis.service';
       },
       inject: [ConfigService],
     },
+    {
+      provide: 'BinanceWeb3',
+      useFactory: (config: ConfigService) => {
+        return new Web3(new Web3.providers.HttpProvider(config.binanceRpcUrl));
+      },
+      inject: [ConfigService],
+    },
   ],
   exports: [WalletCore, WalletHelper, WalletService],
 })

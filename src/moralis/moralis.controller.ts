@@ -6,11 +6,13 @@ import { EtherScanService } from '../transaction/etherscan.service';
 import { SocketsService } from '../webhooks/sockets.service';
 import Web3 from 'web3';
 import { SyncMoralisWithDbDto } from './dto/sync-moralis-with-db.dto';
+import { WalletHelper } from '../wallet/helpers/wallet.helper';
 
 @ApiTags('Moralis')
 @Controller('moralis')
 export class MoralisController {
   constructor(
+    private readonly walletHelper: WalletHelper,
     private readonly moralisService: MoralisService,
     private readonly bscscanService: BscScanService,
     private readonly etherscanService: EtherScanService,
@@ -29,14 +31,11 @@ export class MoralisController {
     console.log('bnb trx from moralis =>', body.object);
 
     /** update balance in db */
-    const balance = await this.bscscanService.getBalance([
+    const balance = await this.walletHelper.getBscBalanceRpc([
       body.object.to_address,
     ]);
 
-    const convertedBalance = await Web3.utils.fromWei(
-      String(balance[0].balance),
-      'ether',
-    );
+    const convertedBalance = await Web3.utils.fromWei(balance, 'ether');
     await this.moralisService.updateBalance(
       body.object.to_address,
       convertedBalance,
@@ -57,14 +56,11 @@ export class MoralisController {
     console.log('eth trx from moralis =>', body.object);
 
     /** update balance in db */
-    const balance = await this.etherscanService.getBalance([
+    const balance = await this.walletHelper.getEthBalanceRpc([
       body.object.to_address,
     ]);
 
-    const convertedBalance = await Web3.utils.fromWei(
-      String(balance[0].balance),
-      'ether',
-    );
+    const convertedBalance = await Web3.utils.fromWei(balance, 'ether');
     await this.moralisService.updateBalance(
       body.object.to_address,
       convertedBalance,

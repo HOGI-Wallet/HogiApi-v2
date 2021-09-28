@@ -31,4 +31,6 @@ export interface ConfigInterface {
 
   MORALIS_APP_ID: string;
   MORALIS_SERVER_URL: string;
+
+  BINANCE_RPC_URL: string;
 }

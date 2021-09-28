@@ -5,6 +5,7 @@ import { ConfigModule } from '../config/config.module';
 import { TransactionModule } from '../transaction/transaction.module';
 import { WebhooksModule } from '../webhooks/webhooks.module';
 import { WalletModule } from '../wallet/wallet.module';
+import { WalletHelper } from '../wallet/helpers/wallet.helper';
 
 @Module({
   imports: [ConfigModule, TransactionModule, WebhooksModule, WalletModule],
