@@ -50,7 +50,7 @@ export class WalletService {
 
     return this.walletHelper.balanceInOtherCurrency(
       coinSymbol,
-      coinRate?.rate ?? 1,
+      coinRate?.rate ?? 0,
       info.balance,
     );
   }
@@ -161,7 +161,7 @@ export class WalletService {
         .lean();
       const balance = await this.walletHelper.balanceInOtherCurrency(
         ratesInfo.coinSymbol,
-        ratesInfo?.rate ?? 1,
+        ratesInfo?.rate ?? 0,
         walletInfo.balance,
       );
       publicInfoDataAdded.push({
