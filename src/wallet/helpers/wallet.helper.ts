@@ -368,27 +368,48 @@ export class WalletHelper {
   }
 
   async getEthBalanceRpc(walletAddress) {
-    const balance = await this.web3.eth.getBalance(walletAddress);
+    const balance = await this.web3.eth.getBalance(
+      this.web3.utils.toChecksumAddress(walletAddress),
+    );
     return String(balance);
   }
 
-  async getERC20BalanceRpc(tokenABI, contractAddress, walletAddress) {
-    const contract = new this.web3.eth.Contract(tokenABI, contractAddress);
-    const balance = await contract.methods.balanceOf(walletAddress).call();
+  async getERC20BalanceRpc(
+    tokenABI,
+    contractAddress: string,
+    walletAddress: string,
+  ) {
+    const contract = new this.web3.eth.Contract(
+      tokenABI,
+      this.web3.utils.toChecksumAddress(contractAddress.toLowerCase()),
+    );
+    const balance = await contract.methods
+      .balanceOf(this.web3.utils.toChecksumAddress(walletAddress.toLowerCase()))
+      .call();
     return String(balance);
   }
 
-  async getBscBalanceRpc(walletAddress) {
-    const balance = await this.binanceWeb3.eth.getBalance(walletAddress);
+  async getBscBalanceRpc(walletAddress: string) {
+    const balance = await this.binanceWeb3.eth.getBalance(
+      this.binanceWeb3.utils.toChecksumAddress(walletAddress.toLowerCase()),
+    );
     return String(balance);
   }
 
-  async getBEP20BalanceRpc(tokenABI, contractAddress, walletAddress) {
+  async getBEP20BalanceRpc(
+    tokenABI,
+    contractAddress: string,
+    walletAddress: string,
+  ) {
     const contract = new this.binanceWeb3.eth.Contract(
       tokenABI,
-      contractAddress,
+      this.binanceWeb3.utils.toChecksumAddress(contractAddress.toLowerCase()),
     );
-    const balance = await contract.methods.balanceOf(walletAddress).call();
+    const balance = await contract.methods
+      .balanceOf(
+        this.binanceWeb3.utils.toChecksumAddress(walletAddress.toLowerCase()),
+      )
+      .call();
     return String(balance);
   }
 }

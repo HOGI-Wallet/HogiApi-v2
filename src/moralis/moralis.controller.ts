@@ -31,9 +31,9 @@ export class MoralisController {
     console.log('bnb trx from moralis =>', body.object);
 
     /** update balance in db */
-    const balance = await this.walletHelper.getBscBalanceRpc([
+    const balance = await this.walletHelper.getBscBalanceRpc(
       body.object.to_address,
-    ]);
+    );
 
     const convertedBalance = await Web3.utils.fromWei(balance, 'ether');
     await this.moralisService.updateBalance(
@@ -56,9 +56,9 @@ export class MoralisController {
     console.log('eth trx from moralis =>', body.object);
 
     /** update balance in db */
-    const balance = await this.walletHelper.getEthBalanceRpc([
+    const balance = await this.walletHelper.getEthBalanceRpc(
       body.object.to_address,
-    ]);
+    );
 
     const convertedBalance = await Web3.utils.fromWei(balance, 'ether');
     await this.moralisService.updateBalance(
