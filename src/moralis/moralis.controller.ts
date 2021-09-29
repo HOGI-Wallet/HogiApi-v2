@@ -28,12 +28,12 @@ export class MoralisController {
     const tx = await this.moralisService.transformBscTx(body, 'bnb');
     await this.moralisService.createTX(tx);
 
-    console.log('bnb trx from moralis =>', body.object);
+    // console.log('bnb trx from moralis =>', body.object);
 
     /** update balance in db */
-    const balance = await this.walletHelper.getBscBalanceRpc([
+    const balance = await this.walletHelper.getBscBalanceRpc(
       body.object.to_address,
-    ]);
+    );
 
     const convertedBalance = await Web3.utils.fromWei(balance, 'ether');
     await this.moralisService.updateBalance(
@@ -53,12 +53,12 @@ export class MoralisController {
     const tx = await this.moralisService.transformEthTx(body, 'eth');
     await this.moralisService.createTX(tx);
 
-    console.log('eth trx from moralis =>', body.object);
+    // console.log('eth trx from moralis =>', body.object);
 
     /** update balance in db */
-    const balance = await this.walletHelper.getEthBalanceRpc([
+    const balance = await this.walletHelper.getEthBalanceRpc(
       body.object.to_address,
-    ]);
+    );
 
     const convertedBalance = await Web3.utils.fromWei(balance, 'ether');
     await this.moralisService.updateBalance(
@@ -71,7 +71,7 @@ export class MoralisController {
 
   @Post('/token')
   async tokenWebhook(@Body() body) {
-    console.log('token balance from moralis =>', body.object);
+    // console.log('token balance from moralis =>', body.object);
     const { coinSymbol, address } = await this.moralisService.tokenWebhook(
       body.object,
     );

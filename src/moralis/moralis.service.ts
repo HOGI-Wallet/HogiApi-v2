@@ -11,6 +11,7 @@ import { WalletEntity, WalletModel } from '../entities/wallet.entity';
 import { CoinDocument, CoinEntity } from '../entities/coin.entity';
 import { BscScanService } from '../transaction/bscscan.service';
 import { EtherScanService } from '../transaction/etherscan.service';
+import Web3 from 'web3';
 
 @Injectable()
 export class MoralisService {
@@ -94,7 +95,11 @@ export class MoralisService {
   }
 
   async updateBalance(address: string, balance: string, coinSymbol: string) {
-    await this.walletModel.updateAddressBalance(address, balance, coinSymbol);
+    await this.walletModel.updateAddressBalance(
+      Web3.utils.toChecksumAddress(address.toLowerCase()),
+      balance,
+      coinSymbol,
+    );
   }
 
   async syncTrxsWithDb(trxs: TransactionsEntity[]) {

@@ -367,23 +367,31 @@ export class WalletHelper {
     }
   }
 
-  async getEthBalanceRpc(walletAddress) {
+  async getEthBalanceRpc(walletAddress: string) {
     const balance = await this.web3.eth.getBalance(walletAddress);
     return String(balance);
   }
 
-  async getERC20BalanceRpc(tokenABI, contractAddress, walletAddress) {
+  async getERC20BalanceRpc(
+    tokenABI,
+    contractAddress: string,
+    walletAddress: string,
+  ) {
     const contract = new this.web3.eth.Contract(tokenABI, contractAddress);
     const balance = await contract.methods.balanceOf(walletAddress).call();
     return String(balance);
   }
 
-  async getBscBalanceRpc(walletAddress) {
+  async getBscBalanceRpc(walletAddress: string) {
     const balance = await this.binanceWeb3.eth.getBalance(walletAddress);
     return String(balance);
   }
 
-  async getBEP20BalanceRpc(tokenABI, contractAddress, walletAddress) {
+  async getBEP20BalanceRpc(
+    tokenABI,
+    contractAddress: string,
+    walletAddress: string,
+  ) {
     const contract = new this.binanceWeb3.eth.Contract(
       tokenABI,
       contractAddress,
