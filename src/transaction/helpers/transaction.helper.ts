@@ -10,7 +10,6 @@ import { WalletDocument, WalletEntity } from '../../entities/wallet.entity';
 import { BlockExplorerUtils } from '../../globals/utils/blockExplorerUtils';
 import Web3 from 'web3';
 import { CoinDocument, CoinEntity } from '../../entities/coin.entity';
-import { address } from 'bitcoinjs-lib';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const abiDecoder = require('abi-decoder');
 
@@ -25,6 +24,8 @@ export class TransactionHelper {
     private readonly walletModel: Model<WalletDocument>,
     @Inject('Web3')
     private readonly web3: Web3,
+    @Inject('BinanceWeb3')
+    private readonly binanceWeb3: Web3,
   ) {}
 
   async createTX(tx: TransactionsEntity) {
@@ -224,5 +225,13 @@ export class TransactionHelper {
       }
     }
     return { toAddress, amount, coin: coin ?? null };
+  }
+
+  async getEthTransactionByRpc(txHash: string) {
+    return await this.web3.eth.getTransaction(txHash);
+  }
+
+  async getBscTransactionByRpc(txHash: string) {
+    return await this.binanceWeb3.eth.getTransaction(txHash);
   }
 }

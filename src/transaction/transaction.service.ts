@@ -82,7 +82,7 @@ export class TransactionService {
     const coinType = await this.walletHelper.getCoinType(coin);
     switch (coinType) {
       case 'isEth': {
-        const tx = await this.etherScanService.getEthTransactionByHash(txHash);
+        const tx = await this.transactionHelper.getEthTransactionByRpc(txHash);
         const dbTxPayload = await this.etherScanService.transformTxs(
           [tx],
           '',
@@ -92,7 +92,7 @@ export class TransactionService {
         return dbTx;
       }
       case 'isERC20': {
-        const tx = await this.etherScanService.getEthTransactionByHash(txHash);
+        const tx = await this.transactionHelper.getEthTransactionByRpc(txHash);
         const {
           toAddress,
           amount,
@@ -107,7 +107,7 @@ export class TransactionService {
         return dbTx;
       }
       case 'isBnb': {
-        const tx = await this.bscScanService.getBnbTransactionByHash(txHash);
+        const tx = await this.transactionHelper.getBscTransactionByRpc(txHash);
         const dbTxPayload = await this.bscScanService.transformTxs(
           [tx],
           '',
@@ -117,7 +117,7 @@ export class TransactionService {
         return dbTx;
       }
       case 'isBEP20': {
-        const tx = await this.bscScanService.getBnbTransactionByHash(txHash);
+        const tx = await this.transactionHelper.getBscTransactionByRpc(txHash);
         const {
           toAddress,
           amount,

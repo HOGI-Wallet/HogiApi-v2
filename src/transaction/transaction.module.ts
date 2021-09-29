@@ -46,6 +46,13 @@ import { Web3BnbTransactionsMonitor } from './crons/web3-bnb-transactions-monito
       },
       inject: [ConfigService],
     },
+    {
+      provide: 'BinanceWeb3',
+      useFactory: (config: ConfigService) => {
+        return new Web3(new Web3.providers.HttpProvider(config.binanceRpcUrl));
+      },
+      inject: [ConfigService],
+    },
   ],
   exports: [TransactionHelper, BscScanService, EtherScanService],
 })
