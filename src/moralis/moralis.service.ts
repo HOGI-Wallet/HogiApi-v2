@@ -83,7 +83,7 @@ export class MoralisService {
     try {
       if (String(tx.amount) !== '0') {
         return await this.transactionModel
-          .updateOne({ txId: tx.txId }, tx, {
+          .findOneAndUpdate({ txId: tx.txId }, tx, {
             upsert: true,
             new: true,
           })

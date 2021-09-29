@@ -91,7 +91,7 @@ export class SyncEthTransactions {
     });
     for (const tx of filteredTrx) {
       dbPromises.push(
-        this.transactionModel.updateOne({ txId: tx.txId }, tx, {
+        this.transactionModel.findOneAndUpdate({ txId: tx.txId }, tx, {
           upsert: true,
         }),
       );
