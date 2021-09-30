@@ -123,37 +123,44 @@ export class MoralisService {
       .findOne({ contractAddress: trx.token_address })
       .lean();
     // console.log('coin in tokenWebhook =>', coin);
-    const balance = String(trx.balance / Math.pow(10, coin?.decimal ?? 18));
-    // console.log('balance in tokenWebhook =>', balance);
-    await this.updateBalance(trx.address, balance, coin.coinSymbol);
-    if (coin.coinSymbol === 'bnb' || coin.isBep20 === true) {
-      const trxs = await this.bscscanService.getBEP20Txs(
-        trx.address,
-        coin.contractAddress,
-      );
-      const transformedTrxs = await this.bscscanService.transformTxs(
-        trxs,
-        trx.address,
-        coin,
-      );
-      await this.syncTrxsWithDb(transformedTrxs);
+    if (coin) {
+      const balance = String(trx.balance / Math.pow(10, coin?.decimal ?? 18));
+      // console.log('balance in tokenWebhook =>', balance);
+      await this.updateBalance(trx.address, balance, coin.coinSymbol);
+      if (coin.coinSymbol === 'bnb' || coin.isBep20 === true) {
+        const trxs = await this.bscscanService.getBEP20Txs(
+          trx.address,
+          coin.contractAddress,
+        );
+        const transformedTrxs = await this.bscscanService.transformTxs(
+          trxs,
+          trx.address,
+          coin,
+        );
+        await this.syncTrxsWithDb(transformedTrxs);
+      }
+      if (coin.coinSymbol === 'eth' || coin.isErc20 === true) {
+        const trxs = await this.etherscanService.getERC20Txs(
+          trx.address,
+          coin.contractAddress,
+        );
+        const transformedTrxs = await this.etherscanService.transformTxs(
+          trxs,
+          trx.address,
+          coin,
+        );
+        await this.syncTrxsWithDb(transformedTrxs);
+      }
+      return {
+        coinSymbol: coin.coinSymbol,
+        address: trx.address,
+      };
+    } else {
+      /**
+       * non native tokens are those which are not present in our own db.
+       */
+      console.log('moralis webhook received for a non native token!');
     }
-    if (coin.coinSymbol === 'eth' || coin.isErc20 === true) {
-      const trxs = await this.etherscanService.getERC20Txs(
-        trx.address,
-        coin.contractAddress,
-      );
-      const transformedTrxs = await this.etherscanService.transformTxs(
-        trxs,
-        trx.address,
-        coin,
-      );
-      await this.syncTrxsWithDb(transformedTrxs);
-    }
-    return {
-      coinSymbol: coin.coinSymbol,
-      address: trx.address,
-    };
   }
 
   async syncMoralisWithDb(update: boolean) {
