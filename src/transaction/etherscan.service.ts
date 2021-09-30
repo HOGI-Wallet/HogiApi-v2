@@ -193,7 +193,7 @@ export class EtherScanService {
       amount: trx.value / Math.pow(10, coin.decimal ?? 18),
       timeStamp: new Date(trx.timeStamp * 1000),
       infoURL: this.config.etherScanExplorerUrl + '/tx/' + trx.hash,
-      confirmations: trx.confirmations,
+      confirmations: trx.confirmations ?? 0,
       from: trx.from.toLowerCase(),
       to: trx.to.toLowerCase(),
       txId: trx.hash,
