@@ -50,7 +50,7 @@ export class TransactionHelper {
     }
     return {
       coinSymbol,
-      confirmations: tx.confirmations,
+      confirmations: tx.confirmations ?? 0,
       explorer: 'blockcypher',
       explorerUrl: tx.hash,
       fee: tx.fees,
@@ -152,7 +152,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 1 },
+          confirmations: { $lt: 6 },
           explorer: 'etherscan',
         })
         .lean();
@@ -165,7 +165,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 1 },
+          confirmations: { $lt: 6 },
           explorer: 'bscscan',
         })
         .lean();
