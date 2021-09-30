@@ -87,6 +87,7 @@ export class WalletController {
   async addPublicInfoForAllCoins(
     @Body() publicinfoData: CreatePublicinfoDto[],
   ) {
+    console.log('new user | recovery');
     return await this.walletService.addPublicInfoForAllCoins(publicinfoData);
   }
 
