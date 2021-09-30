@@ -94,7 +94,7 @@ export class MoralisController {
   async tokenWebhook(@Body() body) {
     console.log('token balance from moralis =>', body.object);
     const socketData = await this.moralisService.tokenWebhook(body.object);
-    if (socketData.coinSymbol) {
+    if (socketData.coinSymbol !== undefined) {
       this.socket.emit(
         { coinSymbol: socketData.coinSymbol },
         socketData.address,
