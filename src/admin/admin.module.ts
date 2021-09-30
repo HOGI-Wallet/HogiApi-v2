@@ -14,8 +14,8 @@ import { DappLinksService } from './dapp-links/dapp-links.service';
 @Module({
   imports: [CoinRatesModule],
   controllers: [
-    CoinController,
-    WalletController,
+    // CoinController,
+    // WalletController,
     NewsController,
     DappLinksController,
   ],
