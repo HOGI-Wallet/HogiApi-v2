@@ -56,7 +56,7 @@ export class SyncEthTransactions {
   /**
    * syncAddresses this method is used to sync all ether base wallets with its blockchain using etherscan api via cron job
    */
-  @Cron(CronExpression.EVERY_MINUTE)
+  // @Cron(CronExpression.EVERY_MINUTE)
   async syncEthAddressAndTxs() {
     console.log('started syncing eth trxs');
     // get all erc20 and eth address
