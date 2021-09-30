@@ -139,7 +139,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 10 },
+          confirmations: { $lt: 12 },
           explorer: 'blockcypher',
         })
         .lean();
