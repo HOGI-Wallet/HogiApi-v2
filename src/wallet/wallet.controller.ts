@@ -16,6 +16,7 @@ import { WalletService } from './wallet.service';
 import { WalletInterface } from './types/wallet.interface';
 import * as bip39 from 'bip39';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { CoinBalanceDto } from './dto/coin-balance.dto';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -99,6 +100,15 @@ export class WalletController {
       param.coinSymbol,
       param.address,
       query.vs_currency,
+    );
+  }
+
+  @Post('balance')
+  async getMyWalletBalanceFromAllCoins(
+    @Body() coinBalanceData: CoinBalanceDto,
+  ) {
+    return await this.walletService.getMyWalletBalanceFromAllCoins(
+      coinBalanceData,
     );
   }
 }

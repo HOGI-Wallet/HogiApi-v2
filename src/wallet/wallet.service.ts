@@ -10,6 +10,7 @@ import { WalletHelper } from './helpers/wallet.helper';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { RatesDocument, RatesEntity } from '../entities/rates.entity';
 import { MoralisService } from '../moralis/moralis.service';
+import { CoinBalanceDto } from './dto/coin-balance.dto';
 
 @Injectable()
 export class WalletService {
@@ -173,5 +174,31 @@ export class WalletService {
       });
     }
     return publicInfoDataAdded;
+  }
+
+  async getMyWalletBalanceFromAllCoins(coinBalanceData: CoinBalanceDto) {
+    const coinRates = await this.ratesModel
+      .find({ currencyCode: coinBalanceData.currencyCode.toUpperCase() })
+      .lean();
+    let coinBalancesAdded = [];
+    for (const data of coinBalanceData.walletsInfo) {
+      const ratesInfo = await coinRates.find(
+        (coin) => coin.coinSymbol === data.coinSymbol,
+      );
+      const walletInfo = await this.walletModel
+        .findOne({ address: data.address, coinSymbol: data.coinSymbol })
+        .lean();
+      const balance = await this.walletHelper.balanceInOtherCurrency(
+        data.coinSymbol,
+        ratesInfo?.rate ?? 0,
+        walletInfo.balance,
+      );
+      coinBalancesAdded.push({
+        coinSymbol: data.coinSymbol,
+        address: data.address,
+        ...balance,
+      });
+    }
+    return coinBalancesAdded;
   }
 }
