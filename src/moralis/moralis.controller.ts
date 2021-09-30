@@ -51,6 +51,7 @@ export class MoralisController {
     );
 
     this.socket.emit({ coinSymbol: 'bnb' }, body.object.to_address);
+    this.socket.emit({ coinSymbol: 'bnb' }, body.object.from_address);
   }
 
   @Post('/eth')
@@ -86,6 +87,7 @@ export class MoralisController {
       'eth',
     );
     this.socket.emit({ coinSymbol: 'eth' }, body.object.to_address);
+    this.socket.emit({ coinSymbol: 'eth' }, body.object.from_address);
   }
 
   @Post('/token')
