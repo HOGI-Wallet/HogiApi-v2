@@ -56,7 +56,7 @@ export class SyncBnbTransactions {
   /**
    * syncAddresses this method is used to sync all binance base wallets with its blockchain using bscscan api via cron job
    */
-  @Cron(CronExpression.EVERY_MINUTE)
+  // @Cron(CronExpression.EVERY_MINUTE)
   async syncBnbAddressAndTxs() {
     console.log('started syncing bnb trxs');
     // get all bep20 and bnb address
