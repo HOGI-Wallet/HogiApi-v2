@@ -24,7 +24,7 @@ export class BlockcypherTransactionMonitor {
   ) {
     // this.monitorBTCLikeTxs();
   }
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_MINUTE)
   async monitorBTCLikeTxs() {
     console.log('started monitoring BC trxs');
     const txs = await this.transactionHelper.getAllBlockCypherUnconfirmedTxs();
