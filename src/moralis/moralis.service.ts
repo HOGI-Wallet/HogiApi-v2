@@ -152,8 +152,8 @@ export class MoralisService {
         await this.syncTrxsWithDb(transformedTrxs);
       }
       return {
-        coinSymbol: coin.coinSymbol,
-        address: trx.address,
+        coinSymbol: coin?.coinSymbol,
+        address: trx?.address,
       };
     } else {
       /**
