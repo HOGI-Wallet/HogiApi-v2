@@ -29,6 +29,7 @@ export class BlockcypherTransactionMonitor {
     console.log('started monitoring BC trxs');
     const txs = await this.transactionHelper.getAllBlockCypherUnconfirmedTxs();
     for (const tx of txs) {
+      console.log('checking tx on blockcypher =>', tx);
       const details = await this.blockypherService.getTxDetails(
         tx.coinSymbol,
         tx.txId,
