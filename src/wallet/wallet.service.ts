@@ -110,14 +110,14 @@ export class WalletService {
         { upsert: true },
       );
 
-      // todo register webhooks
+      // todo register addresses for watching
       const coinType = await this.walletHelper.getCoinType(coin);
-      if (coinType === 'btcLike') {
-        await this.blockcypherService.registerWebhook(
-          data.address,
-          coin.coinSymbol,
-        );
-      }
+      // if (coinType === 'btcLike') {
+      //   await this.blockcypherService.registerWebhook(
+      //     data.address,
+      //     coin.coinSymbol,
+      //   );
+      // }
       if (coinType === 'isEth' || coinType === 'isERC20') {
         await this.moralisService.watchEthAddress(data.address);
       }
