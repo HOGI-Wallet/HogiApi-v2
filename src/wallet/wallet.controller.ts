@@ -107,6 +107,7 @@ export class WalletController {
   async getMyWalletBalanceFromAllCoins(
     @Body() coinBalanceData: CoinBalanceDto,
   ) {
+    console.log('"pull to refresh" request by user');
     return await this.walletService.getMyWalletBalanceFromAllCoins(
       coinBalanceData,
     );
