@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -10,7 +9,7 @@ import { BlockcypherService } from '../blockcypher/blockcypher.service';
 import { CoinDocument, CoinEntity } from '../entities/coin.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Mode } from 'fs';
-import { Model } from 'mongoose';
+import { Model, Promise } from 'mongoose';
 import { SendTransactionDto } from './dto/send-transaction.dto';
 import { WalletHelper } from '../wallet/helpers/wallet.helper';
 import { TransactionRepo } from './transaction.repo';
@@ -20,6 +19,12 @@ import { Transaction as EthereumTx } from 'ethereumjs-tx';
 import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { EtherScanService } from './etherscan.service';
 import { BscScanService } from './bscscan.service';
+import { WalletDocument, WalletEntity } from '../entities/wallet.entity';
+import {
+  TransactionModel,
+  TransactionsEntity,
+} from '../entities/transactions.entity';
+import { SocketsService } from '../webhooks/sockets.service';
 
 @Injectable()
 export class TransactionService {
@@ -33,6 +38,11 @@ export class TransactionService {
     private readonly coinModel: Model<CoinDocument>,
     private readonly etherScanService: EtherScanService,
     private readonly bscScanService: BscScanService,
+    @InjectModel(WalletEntity.name)
+    private readonly walletModel: Model<WalletDocument>,
+    @InjectModel(TransactionsEntity.name)
+    private readonly transactionModel: TransactionModel,
+    private readonly socket: SocketsService,
   ) {}
 
   async createTx(coinSymbol: string, tx: CreateTransactionDto) {
@@ -143,6 +153,80 @@ export class TransactionService {
         const dbTx = await this.transactionRepo.createTx(dbTxPayload);
         return dbTx;
       }
+    }
+  }
+
+  /**
+   * this method with upsert trx in to db
+   * @param trx
+   */
+  async syncTrxsWithDb(trxs: TransactionsEntity[]) {
+    const dbPromises = [];
+    const filteredTrx = trxs.filter((trx: TransactionsEntity) => {
+      return String(trx.amount) !== '0';
+    });
+    for (const tx of filteredTrx) {
+      dbPromises.push(
+        this.transactionModel.findOneAndUpdate({ txId: tx.txId }, tx, {
+          upsert: true,
+        }),
+      );
+    }
+    const txs = await Promise.all(dbPromises);
+    // emit txs to sockets
+    // this.socket.emitTxs(txs);
+    return txs;
+  }
+
+  async sync(coinSymbol: string, address: string) {
+    const coin: CoinEntity = await this.coinModel.findOne({ coinSymbol });
+    if (coin) {
+      const wallet: WalletEntity = await this.walletModel.findOne({
+        address,
+        coinSymbol: coin.coinSymbol,
+      });
+      if (wallet) {
+        if (wallet.coinSymbol === 'bnb' || wallet.isBEP20 === true) {
+          const txs = await this.bscScanService.getTxs(wallet.address, coin);
+          /**
+           * update balance
+           */
+          await this.walletHelper.updateBnbLikeWalletsBalance(
+            wallet.address,
+            wallet.coinSymbol,
+          );
+
+          /** update last transaction update time in wallet */
+          await this.walletModel.findOneAndUpdate(
+            { _id: wallet._id },
+            { lastTxUpdate: new Date().toISOString() },
+          );
+          if (txs?.length) return await this.syncTrxsWithDb(txs);
+        } else if (wallet.coinSymbol === 'eth' || wallet.isERC20 === true) {
+          const txs = await this.etherScanService.getTxs(wallet.address, coin);
+
+          /**
+           * update balance
+           */
+          await this.walletHelper.updateEthLikeWalletsBalance(
+            wallet.address,
+            wallet.coinSymbol,
+          );
+
+          /** update last transaction update time in wallet */
+          await this.walletModel.findOneAndUpdate(
+            { _id: wallet._id },
+            { lastTxUpdate: new Date().toISOString() },
+          );
+          if (txs?.length) return await this.syncTrxsWithDb(txs);
+        } else {
+          return 'Wallet sync not supported.';
+        }
+      } else {
+        return 'Wallet not found in DB.';
+      }
+    } else {
+      return 'Coin not found In DB.';
     }
   }
 }
