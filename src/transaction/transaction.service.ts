@@ -172,10 +172,7 @@ export class TransactionService {
         }),
       );
     }
-    const txs = await Promise.all(dbPromises);
-    // emit txs to sockets
-    // this.socket.emitTxs(txs);
-    return txs;
+    return await Promise.all(dbPromises);
   }
 
   async sync(coinSymbol: string, address: string) {
@@ -201,6 +198,7 @@ export class TransactionService {
             { _id: wallet._id },
             { lastTxUpdate: new Date().toISOString() },
           );
+          this.socket.emit({ coinSymbol: wallet.coinSymbol }, wallet.address);
           if (txs?.length) return await this.syncTrxsWithDb(txs);
         } else if (wallet.coinSymbol === 'eth' || wallet.isERC20 === true) {
           const txs = await this.etherScanService.getTxs(wallet.address, coin);
@@ -218,6 +216,8 @@ export class TransactionService {
             { _id: wallet._id },
             { lastTxUpdate: new Date().toISOString() },
           );
+          // emit txs to sockets
+          this.socket.emit({ coinSymbol: wallet.coinSymbol }, wallet.address);
           if (txs?.length) return await this.syncTrxsWithDb(txs);
         } else {
           return 'Wallet sync not supported.';
