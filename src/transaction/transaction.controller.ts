@@ -57,4 +57,11 @@ export class TransactionController {
       body.coinSymbol,
     );
   }
+
+  @ApiParam({ name: 'coinSymbol' })
+  @ApiParam({ name: 'address' })
+  @Get('/sync/:coinSymbol/:address')
+  async sync(@Param() param) {
+    return this.transactionService.sync(param.coinSymbol, param.address);
+  }
 }
