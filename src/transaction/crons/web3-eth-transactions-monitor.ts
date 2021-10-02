@@ -27,7 +27,7 @@ export class Web3EthTransactionsMonitor {
   ) {
     // this.monitorEthTx();
   }
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async monitorEthTx() {
     console.log('started monitoring eth trxs');
     const txs = await this.transactionHelper.getAllWeb3UnconfirmedTxs();
