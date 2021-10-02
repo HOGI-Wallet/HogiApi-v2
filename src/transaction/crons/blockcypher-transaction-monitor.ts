@@ -40,7 +40,7 @@ export class BlockcypherTransactionMonitor {
         details.confirmations,
       );
       // update wallet balance of to and from of txs
-      if (tx.confirmations >= 6) {
+      if (tx.confirmations >= 3) {
         await this.walletHelper.updateBTCLikeWalletsBalance(
           tx.coinSymbol,
           tx.to,
