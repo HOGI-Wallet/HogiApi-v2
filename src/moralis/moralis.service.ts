@@ -188,7 +188,7 @@ export class MoralisService {
   async tokenTransferWebhook(trx: any) {
     let coinType;
     const coin: CoinEntity = await this.coinModel
-      .findOne({ contractAddress: trx.token_address })
+      .findOne({ contractAddress: new RegExp(`^${trx.token_address}$`, 'i') })
       .lean();
     if (coin) {
       if (coin.isErc20 === true) {
