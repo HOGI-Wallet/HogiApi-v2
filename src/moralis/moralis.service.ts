@@ -191,6 +191,7 @@ export class MoralisService {
       .findOne({ contractAddress: new RegExp(`^${trx.token_address}$`, 'i') })
       .lean();
     if (coin) {
+      console.log(`${coin.coinSymbol} token trx from moralis =>`, trx);
       if (coin.isErc20 === true) {
         coinType = 'isERC20';
         /**

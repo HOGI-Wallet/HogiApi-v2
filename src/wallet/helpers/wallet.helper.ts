@@ -28,8 +28,6 @@ export class WalletHelper {
     @Inject('BinanceWeb3')
     private readonly binanceWeb3: Web3,
     private readonly config: ConfigService,
-    private readonly etherScanService: EtherScanService,
-    private readonly bscScanService: BscScanService,
   ) {}
 
   /**
