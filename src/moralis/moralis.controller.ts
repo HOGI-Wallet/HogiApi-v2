@@ -90,14 +90,32 @@ export class MoralisController {
     this.socket.emit({ coinSymbol: 'eth' }, body.object.from_address);
   }
 
-  @Post('/token')
-  async tokenWebhook(@Body() body) {
-    console.log('token balance from moralis =>', body.object);
-    const socketData = await this.moralisService.tokenWebhook(body.object);
-    if (socketData?.coinSymbol !== undefined) {
+  // @Post('/token-balance')
+  // async tokenBalanceWebhook(@Body() body) {
+  //   console.log('token balance from moralis =>', body.object);
+  //   const socketData = await this.moralisService.tokenBalanceWebhook(body.object);
+  //   if (socketData?.coinSymbol !== undefined) {
+  //     this.socket.emit(
+  //       { coinSymbol: socketData?.coinSymbol },
+  //       socketData.address,
+  //     );
+  //   }
+  // }
+
+  @Post('/token-transfer')
+  async tokenTransferWebhook(@Body() body) {
+    console.log('token trx from moralis =>', body.object);
+    const socketData = await this.moralisService.tokenTransferWebhook(
+      body.object,
+    );
+    if (socketData?.to.coinSymbol !== undefined) {
       this.socket.emit(
-        { coinSymbol: socketData?.coinSymbol },
-        socketData.address,
+        { coinSymbol: socketData?.to.coinSymbol },
+        socketData?.to.address,
+      );
+      this.socket.emit(
+        { coinSymbol: socketData?.from.coinSymbol },
+        socketData?.from.address,
       );
     }
   }

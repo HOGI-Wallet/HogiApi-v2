@@ -12,6 +12,7 @@ import { CoinDocument, CoinEntity } from '../entities/coin.entity';
 import { BscScanService } from '../transaction/bscscan.service';
 import { EtherScanService } from '../transaction/etherscan.service';
 import Web3 from 'web3';
+import { WalletHelper } from '../wallet/helpers/wallet.helper';
 
 @Injectable()
 export class MoralisService {
@@ -25,6 +26,7 @@ export class MoralisService {
     private readonly coinModel: Model<CoinDocument>,
     private readonly bscscanService: BscScanService,
     private readonly etherscanService: EtherScanService,
+    private readonly walletHelper: WalletHelper,
   ) {}
 
   async watchBscAddress(address: string) {
@@ -48,7 +50,7 @@ export class MoralisService {
       coinSymbol,
       amount: trx.object.value / Math.pow(10, 18),
       timeStamp: new Date(trx.object.createdAt),
-      infoURL: this.configService.bscScanExplorerUrl + '/tx/' + trx.hash,
+      infoURL: this.configService.bscScanExplorerUrl + '/tx/' + trx.object.hash,
       confirmations: trx.object.confirmed ? 6 : 0,
       from: trx.object.from_address.toLowerCase(),
       to: trx.object.to_address.toLowerCase(),
@@ -66,7 +68,8 @@ export class MoralisService {
       coinSymbol,
       amount: trx.object.value / Math.pow(10, 18),
       timeStamp: new Date(trx.object.createdAt),
-      infoURL: this.configService.etherScanExplorerUrl + '/tx/' + trx.hash,
+      infoURL:
+        this.configService.etherScanExplorerUrl + '/tx/' + trx.object.hash,
       confirmations: trx.object.confirmed ? 6 : 0,
       from: trx.object.from_address.toLowerCase(),
       to: trx.object.to_address.toLowerCase(),
@@ -76,6 +79,25 @@ export class MoralisService {
         : trx.object.block_number,
       explorer: 'etherscan',
       explorerUrl: trx.object.hash,
+    };
+  }
+
+  async transformTokenTransfer(trx: any, coinSymbol: string, coinType: string) {
+    return {
+      coinSymbol,
+      amount: trx.value / Math.pow(10, 18),
+      timeStamp: new Date(trx.createdAt),
+      infoURL:
+        this.configService.etherScanExplorerUrl + '/tx/' + trx.transaction_hash,
+      confirmations: trx.confirmed ? 6 : 0,
+      from: trx.from_address.toLowerCase(),
+      to: trx.to_address.toLowerCase(),
+      txId: trx.transaction_hash,
+      blockHeight: String(trx.block_number).includes('x')
+        ? parseInt(trx.block_number, 16) // sometimes its hex, other times its not
+        : trx.block_number,
+      explorer: coinType === 'isERC20' ? 'etherscan' : 'bscscan',
+      explorerUrl: trx.transaction_hash,
     };
   }
 
@@ -102,23 +124,7 @@ export class MoralisService {
     );
   }
 
-  async syncTrxsWithDb(trxs: TransactionsEntity[]) {
-    const dbPromises = [];
-    const filteredTrx = trxs.filter((trx: TransactionsEntity) => {
-      return String(trx.amount) !== '0';
-    });
-    for (const tx of filteredTrx) {
-      dbPromises.push(
-        this.transactionModel.findOneAndUpdate({ txId: tx.txId }, tx, {
-          upsert: true,
-        }),
-      );
-    }
-    const txs = await Promise.all(dbPromises);
-    return txs;
-  }
-
-  async tokenWebhook(trx: any) {
+  async tokenBalanceWebhook(trx: any) {
     const coin: CoinEntity = await this.coinModel
       .findOne({ contractAddress: trx.token_address })
       .lean();
@@ -154,6 +160,92 @@ export class MoralisService {
       return {
         coinSymbol: coin?.coinSymbol,
         address: trx?.address,
+      };
+    } else {
+      /**
+       * non native tokens are those which are not present in our own db.
+       */
+      console.log('moralis webhook received for a non native token!');
+    }
+  }
+
+  async syncTrxsWithDb(trxs: TransactionsEntity[]) {
+    const dbPromises = [];
+    const filteredTrx = trxs.filter((trx: TransactionsEntity) => {
+      return String(trx.amount) !== '0';
+    });
+    for (const tx of filteredTrx) {
+      dbPromises.push(
+        this.transactionModel.findOneAndUpdate({ txId: tx.txId }, tx, {
+          upsert: true,
+        }),
+      );
+    }
+    const txs = await Promise.all(dbPromises);
+    return txs;
+  }
+
+  async tokenTransferWebhook(trx: any) {
+    let coinType;
+    const coin: CoinEntity = await this.coinModel
+      .findOne({ contractAddress: trx.token_address })
+      .lean();
+    if (coin) {
+      if (coin.isErc20 === true) {
+        coinType = 'isERC20';
+        /**
+         * create transaction
+         */
+        const tx = await this.transformTokenTransfer(
+          trx,
+          coin.coinSymbol,
+          coinType,
+        );
+        await this.createTX(tx);
+        /**
+         * update balance
+         */
+        await this.walletHelper.updateEthLikeWalletsBalance(
+          trx.to_address,
+          coin.coinSymbol,
+        );
+        await this.walletHelper.updateEthLikeWalletsBalance(
+          trx.from_address,
+          coin.coinSymbol,
+        );
+      }
+      if (coin.isBep20 === true) {
+        coinType = 'isBEP20';
+        /**
+         * create transaction
+         */
+        const tx = await this.transformTokenTransfer(
+          trx,
+          coin.coinSymbol,
+          coinType,
+        );
+        await this.createTX(tx);
+        /**
+         * update balance
+         */
+        await this.walletHelper.updateBnbLikeWalletsBalance(
+          trx.to_address,
+          coin.coinSymbol,
+        );
+        await this.walletHelper.updateBnbLikeWalletsBalance(
+          trx.from_address,
+          coin.coinSymbol,
+        );
+      }
+      return {
+        to: {
+          coinSymbol: coin?.coinSymbol,
+          address: trx?.to_address,
+        },
+        from: {
+          coinSymbol: coin?.coinSymbol,
+          address: trx?.from_address,
+        },
       };
     } else {
       /**
