@@ -104,7 +104,6 @@ export class MoralisController {
 
   @Post('/token-transfer')
   async tokenTransferWebhook(@Body() body) {
-    console.log('token trx from moralis =>', body.object);
     const socketData = await this.moralisService.tokenTransferWebhook(
       body.object,
     );
