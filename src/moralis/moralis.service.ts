@@ -252,7 +252,7 @@ export class MoralisService {
       /**
        * non native tokens are those which are not present in our own db.
        */
-      console.log('moralis webhook received for a non native token!');
+      console.log('moralis webhook received for a non native token! =>', trx);
     }
   }
 

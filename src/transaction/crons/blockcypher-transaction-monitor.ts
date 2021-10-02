@@ -40,16 +40,11 @@ export class BlockcypherTransactionMonitor {
         details.confirmations,
       );
       // update wallet balance of to and from of txs
-      if (tx.confirmations >= 3) {
-        await this.walletHelper.updateBTCLikeWalletsBalance(
-          tx.coinSymbol,
-          tx.to,
-        );
-        await this.walletHelper.updateBTCLikeWalletsBalance(
-          tx.coinSymbol,
-          tx.from,
-        );
-      }
+      await this.walletHelper.updateBTCLikeWalletsBalance(tx.coinSymbol, tx.to);
+      await this.walletHelper.updateBTCLikeWalletsBalance(
+        tx.coinSymbol,
+        tx.from,
+      );
       // send data to tx., and tx.from
       this.socketService.emit({ coinSymbol: tx.coinSymbol }, tx.to);
       this.socketService.emit({ coinSymbol: tx.coinSymbol }, tx.from);
