@@ -70,28 +70,19 @@ export class BlockcypherTransactionMonitor {
   }
 
   // @Cron(CronExpression.EVERY_30_SECONDS)
-  async syncBTCLikeTxs() {
+  async syncBTCLikeBalances() {
     console.log('syncing trx from blockcypher');
     const wallets = await this.getBtcLikeAddresses();
     for (const wallet of wallets) {
-      const history = await this.blockypherService.getHistory(
+      const balance = await this.blockypherService.getBalance(
         wallet.coinSymbol,
         wallet.address,
       );
-      const balance = String(history?.final_balance / Math.pow(10, 8));
-      await history?.txs.map(async (tx) => {
-        await this.transactionHelper.createTX(
-          this.transactionHelper.transformBCTx(
-            wallet.coinSymbol,
-            tx,
-            wallet.address,
-          ),
-        );
-      });
+      const final_balance = String(balance?.final_balance / Math.pow(10, 8));
       /** update last transaction update time in wallet*/
       await this.walletModel.findOneAndUpdate(
         { _id: wallet._id },
-        { lastTxUpdate: new Date().toISOString(), balance },
+        { lastTxUpdate: new Date().toISOString(), balance: final_balance },
       );
     }
   }

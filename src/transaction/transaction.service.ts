@@ -230,7 +230,9 @@ export class TransactionService {
           const final_balance = String(
             balance?.final_balance / Math.pow(10, 8),
           );
-          /** update last transaction update time in wallet*/
+          /**
+           * update balance
+           */
           await this.walletModel.findOneAndUpdate(
             { _id: wallet._id },
             { lastTxUpdate: new Date().toISOString(), balance: final_balance },
