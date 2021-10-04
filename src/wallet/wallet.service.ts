@@ -185,9 +185,27 @@ export class WalletService {
       const ratesInfo = await coinRates.find(
         (coin) => coin.coinSymbol === data.coinSymbol,
       );
-      const walletInfo = await this.walletModel
-        .findOne({ address: data.address, coinSymbol: data.coinSymbol })
-        .lean();
+      let walletInfo;
+      if (data.coinSymbol === 'btc' || data.coinSymbol === 'doge') {
+        const balance = await this.blockcypherService.getBalance(
+          data.coinSymbol,
+          data.address,
+        );
+        const final_balance = String(balance?.final_balance / Math.pow(10, 8));
+        /** update last transaction update time in wallet*/
+        await this.walletModel.findOneAndUpdate(
+          { address: data.address, coinSymbol: data.coinSymbol },
+          { balance: final_balance },
+        );
+        walletInfo = {
+          balance: final_balance,
+        };
+      } else {
+        walletInfo = await this.walletModel
+          .findOne({ address: data.address, coinSymbol: data.coinSymbol })
+          .lean();
+      }
+
       const balance = await this.walletHelper.balanceInOtherCurrency(
         data.coinSymbol,
         ratesInfo?.rate ?? 0,

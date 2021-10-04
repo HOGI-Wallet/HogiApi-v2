@@ -17,7 +17,7 @@ import { DappLinksService } from './dapp-links/dapp-links.service';
     // CoinController,
     // WalletController,
     // NewsController,
-    // DappLinksController,
+    DappLinksController,
   ],
   providers: [
     CoinService,
