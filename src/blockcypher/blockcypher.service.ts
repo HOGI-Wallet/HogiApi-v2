@@ -231,4 +231,17 @@ export class BlockcypherService {
       throw new Error("couldn't get tx details from blockypher");
     }
   }
+
+  async getHistory(coinSymbol: string, address: string) {
+    try {
+      const tx = await this.http
+        .get(
+          BlockcypherService.buildApiUrl(coinSymbol, `addrs/${address}/full`),
+        )
+        .toPromise();
+      return tx.data;
+    } catch (e) {
+      throw new Error("couldn't sync wallet!");
+    }
+  }
 }
