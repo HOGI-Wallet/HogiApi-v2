@@ -223,26 +223,19 @@ export class TransactionService {
           wallet.coinSymbol === 'btc' ||
           wallet.coinSymbol === 'doge'
         ) {
-          const history = await this.blockcypherService.getHistory(
+          const balance = await this.blockcypherService.getBalance(
             wallet.coinSymbol,
             wallet.address,
           );
-          const balance = String(history?.final_balance / Math.pow(10, 8));
-          await history?.txs.map(async (tx) => {
-            await this.transactionHelper.createTX(
-              this.transactionHelper.transformBCTx(
-                wallet.coinSymbol,
-                tx,
-                wallet.address,
-              ),
-            );
-          });
+          const final_balance = String(
+            balance?.final_balance / Math.pow(10, 8),
+          );
           /** update last transaction update time in wallet*/
           await this.walletModel.findOneAndUpdate(
             { _id: wallet._id },
-            { lastTxUpdate: new Date().toISOString(), balance },
+            { lastTxUpdate: new Date().toISOString(), balance: final_balance },
           );
-          return history;
+          return balance;
         } else {
           return 'Wallet sync not supported.';
         }
