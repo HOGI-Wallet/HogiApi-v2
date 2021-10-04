@@ -20,10 +20,10 @@ import { LoginCredentialsDto } from './dto/login-credentials.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/create-user')
-  createUser(@Body() authCredentialsDto: AuthCredentialsDto) {
-    return this.authService.createUser(authCredentialsDto);
-  }
+  // @Post('/create-user')
+  // createUser(@Body() authCredentialsDto: AuthCredentialsDto) {
+  //   return this.authService.createUser(authCredentialsDto);
+  // }
 
   @Post('/login')
   login(
@@ -32,23 +32,23 @@ export class AuthController {
     return this.authService.login(loginCredentialsDto);
   }
 
-  @Post('/change-password')
-  async changePassword(@Body() body: ChangePasswordDto, @Req() { user }) {
-    return this.authService.changePassword(
-      user.userId,
-      body.newPassword,
-      body.oldPassword,
-    );
-  }
+  // @Post('/change-password')
+  // async changePassword(@Body() body: ChangePasswordDto, @Req() { user }) {
+  //   return this.authService.changePassword(
+  //     user.userId,
+  //     body.newPassword,
+  //     body.oldPassword,
+  //   );
+  // }
 
-  @Get('/all-users')
-  async getAllUsers() {
-    return this.authService.getAllUsers();
-  }
+  // @Get('/all-users')
+  // async getAllUsers() {
+  //   return this.authService.getAllUsers();
+  // }
 
-  @ApiParam({ name: 'id' })
-  @Delete('/delete-user/:id')
-  async deleteUser(@Param() params) {
-    return this.authService.deleteUser(params.id);
-  }
+  // @ApiParam({ name: 'id' })
+  // @Delete('/delete-user/:id')
+  // async deleteUser(@Param() params) {
+  //   return this.authService.deleteUser(params.id);
+  // }
 }
