@@ -82,10 +82,15 @@ export class MoralisService {
     };
   }
 
-  async transformTokenTransfer(trx: any, coinSymbol: string, coinType: string) {
+  async transformTokenTransfer(
+    trx: any,
+    coinSymbol: string,
+    decimal: number,
+    coinType: string,
+  ) {
     return {
       coinSymbol,
-      amount: trx.value / Math.pow(10, 18),
+      amount: trx.value / Math.pow(10, decimal ?? 18),
       timeStamp: new Date(trx.createdAt),
       infoURL:
         this.configService.etherScanExplorerUrl + '/tx/' + trx.transaction_hash,
@@ -200,6 +205,7 @@ export class MoralisService {
         const tx = await this.transformTokenTransfer(
           trx,
           coin.coinSymbol,
+          coin.decimal,
           coinType,
         );
         await this.createTX(tx);
@@ -223,6 +229,7 @@ export class MoralisService {
         const tx = await this.transformTokenTransfer(
           trx,
           coin.coinSymbol,
+          coin.decimal,
           coinType,
         );
         await this.createTX(tx);
