@@ -52,38 +52,4 @@ export class BlockcypherTransactionMonitor {
       this.socketService.emit({ coinSymbol: tx.coinSymbol }, tx.from);
     }
   }
-
-  async getBtcLikeAddresses(): Promise<WalletEntity[]> {
-    try {
-      return await this.walletModel
-        .find({
-          $or: [{ coinSymbol: 'btc' }, { coinSymbol: 'doge' }],
-          lastTxUpdate: {
-            $lte: new Date(new Date().getTime() - 1000 * 60 * 5).toISOString(),
-          },
-        })
-        .populate('coin')
-        .lean();
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  // @Cron(CronExpression.EVERY_30_SECONDS)
-  async syncBTCLikeBalances() {
-    console.log('syncing trx from blockcypher');
-    const wallets = await this.getBtcLikeAddresses();
-    for (const wallet of wallets) {
-      const balance = await this.blockypherService.getBalance(
-        wallet.coinSymbol,
-        wallet.address,
-      );
-      const final_balance = String(balance?.final_balance / Math.pow(10, 8));
-      /** update last transaction update time in wallet*/
-      await this.walletModel.findOneAndUpdate(
-        { _id: wallet._id },
-        { lastTxUpdate: new Date().toISOString(), balance: final_balance },
-      );
-    }
-  }
 }
