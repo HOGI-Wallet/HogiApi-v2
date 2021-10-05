@@ -10,6 +10,10 @@ import {
   BlockCypherWebhookDocument,
   BlockCypherWebhookEntity,
 } from '../entities/blockcypher-webhook.entity';
+import {
+  TransactionsDocument,
+  TransactionsEntity,
+} from '../entities/transactions.entity';
 
 function delay(seconds) {
   return new Promise((resolve) => {
@@ -241,7 +245,7 @@ export class BlockcypherService {
         .toPromise();
       return tx.data;
     } catch (e) {
-      throw new Error("couldn't sync wallet!");
+      throw new Error("couldn't get wallet history!");
     }
   }
 }

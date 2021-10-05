@@ -11,6 +11,11 @@ import { BlockExplorerUtils } from '../globals/utils/blockExplorerUtils';
 import { RatesDocument, RatesEntity } from '../entities/rates.entity';
 import { MoralisService } from '../moralis/moralis.service';
 import { CoinBalanceDto } from './dto/coin-balance.dto';
+import { TransactionHelper } from '../transaction/helpers/transaction.helper';
+import {
+  TransactionsDocument,
+  TransactionsEntity,
+} from '../entities/transactions.entity';
 
 @Injectable()
 export class WalletService {
@@ -24,7 +29,9 @@ export class WalletService {
     @InjectModel(WalletEntity.name)
     private readonly walletModel: Model<WalletDocument>,
     private readonly walletHelper: WalletHelper,
-    private readonly moralisService: MoralisService,
+    private readonly moralisService: MoralisService, // private readonly transactionHelper: TransactionHelper,
+    @InjectModel(TransactionsEntity.name)
+    private readonly transactionModel: Model<TransactionsDocument>,
   ) {}
 
   async getMyWalletBalance(
@@ -176,6 +183,52 @@ export class WalletService {
     return publicInfoDataAdded;
   }
 
+  async createTX(tx: TransactionsEntity) {
+    try {
+      return await this.transactionModel
+        .findOneAndUpdate({ txId: tx.txId }, tx, {
+          upsert: true,
+          new: true,
+        })
+        .lean();
+    } catch (e) {
+      throw new Error("couldn't create tx in DB");
+    }
+  }
+  transformBCTx(
+    coinSymbol: string,
+    tx,
+    toAddress?: string,
+  ): TransactionsEntity {
+    if (!toAddress) {
+      toAddress = tx.outputs[0].addresses[0];
+    }
+    return {
+      coinSymbol,
+      confirmations: tx.confirmations ?? 0,
+      explorer: 'blockcypher',
+      explorerUrl: tx.hash,
+      fee: tx.fees,
+      from: tx.inputs[0].addresses[0],
+      timeStamp: tx.received,
+      to: toAddress,
+      txId: tx.hash,
+      blockHeight: tx.block_height,
+      //assuming p2pkh transaction from (and output consist one output)
+      // amount: String(
+      //   tx.outputs.find((out) => out?.addresses.includes(toAddress))?.value /
+      //     Math.pow(10, 8),
+      // ),
+      amount: String(tx.outputs[0]?.value / Math.pow(10, 8)),
+    };
+  }
+
+  async updateTxHistory(txs: any, coinSymbol: string, address: string) {
+    txs.map(async (tx) => {
+      await this.createTX(this.transformBCTx(coinSymbol, tx, address));
+    });
+  }
+
   async getMyWalletBalanceFromAllCoins(coinBalanceData: CoinBalanceDto) {
     const coinRates = await this.ratesModel
       .find({ currencyCode: coinBalanceData.currencyCode.toUpperCase() })
@@ -187,12 +240,19 @@ export class WalletService {
       );
       let walletInfo;
       if (data.coinSymbol === 'btc' || data.coinSymbol === 'doge') {
-        const balance = await this.blockcypherService.getBalance(
+        const history = await this.blockcypherService.getHistory(
           data.coinSymbol,
           data.address,
         );
-        const final_balance = String(balance?.final_balance / Math.pow(10, 8));
-        /** update last transaction update time in wallet*/
+        const final_balance = String(history?.final_balance / Math.pow(10, 8));
+
+        /**
+         * update transactions history
+         */
+        this.updateTxHistory(history?.txs, data.coinSymbol, data.address);
+        /**
+         * update balance
+         */
         await this.walletModel.findOneAndUpdate(
           { address: data.address, coinSymbol: data.coinSymbol },
           { balance: final_balance },

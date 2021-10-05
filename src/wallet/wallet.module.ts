@@ -7,12 +7,9 @@ import { WalletService } from './wallet.service';
 import { CoinRatesModule } from '../coin-rates/coin-rates.module';
 import { ConfigService } from '../config/config.service';
 import Web3 from 'web3';
-import { BlockcypherService } from '../blockcypher/blockcypher.service';
-import { TransactionModule } from '../transaction/transaction.module';
 import { EtherScanService } from '../transaction/etherscan.service';
 import { ConfigModule } from '../config/config.module';
 import { BscScanService } from '../transaction/bscscan.service';
-import { CoinRatesService } from '../coin-rates/coin-rates.service';
 import { MoralisService } from '../moralis/moralis.service';
 
 @Module({
