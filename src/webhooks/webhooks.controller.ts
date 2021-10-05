@@ -21,31 +21,31 @@ export class WebhooksController {
     private readonly transactionHelper: TransactionHelper,
     private readonly blockypherService: BlockcypherService,
   ) {}
-  // @ApiParam({ name: 'address' })
-  // @ApiParam({ name: 'coinSymbol' })
-  // @Post('blockCypher/hooks/callback/:coinSymbol/:address')
-  // async receiveBChooks(@Body() body, @Param() param) {
-  //   /** create tx in db
-  //    * presumption: hooks is register for every address. if tx.outputs contains other address, safely ignore them
-  //    */
-  //   const tx = await this.transactionHelper.createTX(
-  //     this.transactionHelper.transformBCTx(
-  //       param.coinSymbol,
-  //       body,
-  //       param.address,
-  //     ),
-  //   );
-  //
-  //   /** update balance in db */
-  //   const balance = await this.blockypherService.getBalance(
-  //     param.coinSymbol,
-  //     param.address,
-  //   );
-  //   await this.walletModel.updateAddressBalance(
-  //     param.address,
-  //     String(balance.final_balance / Math.pow(10, 8)),
-  //     param.coinSymbol,
-  //   );
-  //   this.socket.emit({ coinSymbol: param.coinSymbol }, param.address);
-  // }
+  @ApiParam({ name: 'address' })
+  @ApiParam({ name: 'coinSymbol' })
+  @Post('blockCypher/hooks/callback/:coinSymbol/:address')
+  async receiveBChooks(@Body() body, @Param() param) {
+    /** create tx in db
+     * presumption: hooks is register for every address. if tx.outputs contains other address, safely ignore them
+     */
+    const tx = await this.transactionHelper.createTX(
+      this.transactionHelper.transformBCTx(
+        param.coinSymbol,
+        body,
+        param.address,
+      ),
+    );
+
+    /** update balance in db */
+    const balance = await this.blockypherService.getBalance(
+      param.coinSymbol,
+      param.address,
+    );
+    await this.walletModel.updateAddressBalance(
+      param.address,
+      String(balance.final_balance / Math.pow(10, 8)),
+      param.coinSymbol,
+    );
+    this.socket.emit({ coinSymbol: param.coinSymbol }, param.address);
+  }
 }
