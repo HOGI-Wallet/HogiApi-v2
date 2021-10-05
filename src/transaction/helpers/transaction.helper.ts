@@ -152,7 +152,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 8 },
+          confirmations: { $lt: 6 },
           explorer: 'etherscan',
         })
         .lean();
@@ -165,7 +165,7 @@ export class TransactionHelper {
     try {
       return await this.transactionModel
         .find({
-          confirmations: { $lt: 8 },
+          confirmations: { $lt: 6 },
           explorer: 'bscscan',
         })
         .lean();
