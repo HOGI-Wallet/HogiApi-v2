@@ -15,6 +15,7 @@ import {
   BlockCypherWebhookSchema,
 } from './blockcypher-webhook.entity';
 import { SparklinesEntity, SparklinesSchema } from './sparklines.entity';
+import { AppAlertEntity, AppAlertSchema } from './app-alert.entity';
 
 const entitiesArray = [
   MongooseModule.forFeature([{ name: CoinEntity.name, schema: CoinSchema }]),
@@ -44,6 +45,9 @@ const entitiesArray = [
   ]),
   MongooseModule.forFeature([
     { name: SparklinesEntity.name, schema: SparklinesSchema },
+  ]),
+  MongooseModule.forFeature([
+    { name: AppAlertEntity.name, schema: AppAlertSchema },
   ]),
 ];
 
