@@ -10,6 +10,8 @@ import { NewsService } from './news/news.service';
 import { S3Service } from '../globals/services/s3.service';
 import { DappLinksController } from './dapp-links/dapp-links.controller';
 import { DappLinksService } from './dapp-links/dapp-links.service';
+import { AppAlertController } from './app-alert/app-alert.controller';
+import { AppAlertService } from './app-alert/app-alert.service';
 
 @Module({
   imports: [CoinRatesModule],
@@ -18,6 +20,7 @@ import { DappLinksService } from './dapp-links/dapp-links.service';
     // WalletController,
     NewsController,
     DappLinksController,
+    AppAlertController,
   ],
   providers: [
     CoinService,
@@ -26,6 +29,7 @@ import { DappLinksService } from './dapp-links/dapp-links.service';
     NewsService,
     DappLinksService,
     S3Service,
+    AppAlertService,
   ],
 })
 export class AdminModule {}
