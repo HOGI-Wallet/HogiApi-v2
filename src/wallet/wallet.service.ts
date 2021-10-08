@@ -269,7 +269,7 @@ export class WalletService {
       const balance = await this.walletHelper.balanceInOtherCurrency(
         data.coinSymbol,
         ratesInfo?.rate ?? 0,
-        walletInfo.balance,
+        walletInfo?.balance ?? 0,
       );
       coinBalancesAdded.push({
         coinSymbol: data.coinSymbol,

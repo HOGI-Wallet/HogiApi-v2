@@ -74,7 +74,7 @@ export class CoinRatesService {
     }
   }
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async updateCoinRates(_coins?: CoinEntity[]) {
     console.log('started update coin rate job');
     /** get supported coins */
