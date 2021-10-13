@@ -174,6 +174,7 @@ export class WalletService {
       );
       publicInfoDataAdded.push({
         coinSymbol: data.coinSymbol,
+        address: data.address,
         chart_data: {
           ...ratesInfo,
         },

@@ -56,7 +56,7 @@
     "hdkey": "^2.0.1",
     "moment": "^2.29.1",
     "mongoose": "^5.11.14",
-    "moralis": "^0.0.54",
+    "moralis": "^0.0.74",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
