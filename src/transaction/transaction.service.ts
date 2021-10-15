@@ -248,4 +248,10 @@ export class TransactionService {
       return 'Coin not found In DB.';
     }
   }
+
+  async submitTxBtc(tx: any, toAddress: string) {
+    return await this.transactionHelper.createTX(
+      this.transactionHelper.transformBCTx('btc', tx, toAddress),
+    );
+  }
 }

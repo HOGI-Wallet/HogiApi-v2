@@ -64,4 +64,11 @@ export class TransactionController {
   async sync(@Param() param) {
     return this.transactionService.sync(param.coinSymbol, param.address);
   }
+
+  @ApiParam({ name: 'toAddress' })
+  @Post('submitTx/btc/:toAddress')
+  async submitTx(@Body() body, @Param('toAddress') toAddress) {
+    // console.log(`addmin btx in db! for toAddress: ${toAddress} =>`, body);
+    return this.transactionService.submitTxBtc(body.tx, toAddress);
+  }
 }
