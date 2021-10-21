@@ -188,7 +188,7 @@ export class WalletHelper {
     const balance = await this.blockcypherService.getBalance(coin, address);
     await this.walletModel.updateAddressBalance(
       address,
-      String(balance.final_balance / Math.pow(10, 8)),
+      String(balance.balance / Math.pow(10, 8)),
       coin,
     );
   }
@@ -335,7 +335,7 @@ export class WalletHelper {
           coin.coinSymbol,
           address,
         );
-        return String(altcoinBalance?.final_balance / Math.pow(10, 8));
+        return String(altcoinBalance?.balance / Math.pow(10, 8));
       }
     } catch (e) {
       console.log(e);

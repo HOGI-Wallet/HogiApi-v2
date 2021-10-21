@@ -223,19 +223,17 @@ export class TransactionService {
           wallet.coinSymbol === 'btc' ||
           wallet.coinSymbol === 'doge'
         ) {
-          const balance = await this.blockcypherService.getBalance(
+          const balanceRes = await this.blockcypherService.getBalance(
             wallet.coinSymbol,
             wallet.address,
           );
-          const final_balance = String(
-            balance?.final_balance / Math.pow(10, 8),
-          );
+          const balance = String(balanceRes?.balance / Math.pow(10, 8));
           /**
            * update balance
            */
           await this.walletModel.findOneAndUpdate(
             { _id: wallet._id },
-            { lastTxUpdate: new Date().toISOString(), balance: final_balance },
+            { lastTxUpdate: new Date().toISOString(), balance },
           );
           return balance;
         } else {

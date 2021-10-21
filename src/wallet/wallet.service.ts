@@ -245,7 +245,7 @@ export class WalletService {
           data.coinSymbol,
           data.address,
         );
-        const final_balance = String(history?.final_balance / Math.pow(10, 8));
+        const balance = String(history?.balance / Math.pow(10, 8));
 
         /**
          * update transactions history
@@ -256,10 +256,10 @@ export class WalletService {
          */
         await this.walletModel.findOneAndUpdate(
           { address: data.address, coinSymbol: data.coinSymbol },
-          { balance: final_balance },
+          { balance },
         );
         walletInfo = {
-          balance: final_balance,
+          balance,
         };
       } else {
         walletInfo = await this.walletModel
