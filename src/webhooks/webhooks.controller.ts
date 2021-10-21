@@ -43,7 +43,7 @@ export class WebhooksController {
     );
     await this.walletModel.updateAddressBalance(
       param.address,
-      String(balance.final_balance / Math.pow(10, 8)),
+      String(balance.balance / Math.pow(10, 8)),
       param.coinSymbol,
     );
     this.socket.emit({ coinSymbol: param.coinSymbol }, param.address);

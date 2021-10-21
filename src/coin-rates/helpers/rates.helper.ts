@@ -165,19 +165,19 @@ export class RatesHelper {
       vs_currency,
       '1d',
     );
-    /** get data for 1d*/
+    /** get data for 7d*/
     const spark_line_7_day = await this.getSparkLineData(
       coingeckoId,
       vs_currency,
       '7d',
     );
-    /** get data for 1d*/
+    /** get data for 30d*/
     const spark_line_30_day = await this.getSparkLineData(
       coingeckoId,
       vs_currency,
       '30d',
     );
-    /** get data for 1d*/
+    /** get data for 90d*/
     const spark_line_90_day = await this.getSparkLineData(
       coingeckoId,
       vs_currency,
