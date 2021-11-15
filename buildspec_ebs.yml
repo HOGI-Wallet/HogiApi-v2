@@ -1,0 +1,47 @@
+version: 0.2
+env:
+  variables:
+    NODE_ENV: "production"
+    PORT: "8080"
+    JWT_SECRET: "kdfjhsdgsjfioeu ifueriuiefksdbfse df kdk"
+    MONGO_URI: "mongodb://master:crypto#123@cryptokara-documentdb.crhask2sgx3u.us-east-2.docdb.amazonaws.com:27017/cryptokara?retryWrites=false"
+    BLOCKCYPHER_URL: "https://api.blockcypher.com"
+    BLOCKCYPHER_API_VERSION: "v1"
+    BLOCKCYPHER_API_ENV: "main"
+    BLOCKCYPHER_API_TOKEN: "e9f372c257c04865ad42830ff86c58f1"
+    INFURA_NETWORK: "https://rinkeby.infura.io/v3/8dfe6343959248cfaee3c88eb2fc6cb6"
+    INFURA_WS: "wss://rinkeby.infura.io/ws/v3/8dfe6343959248cfaee3c88eb2fc6cb6"
+    chain: "rinkeby"
+    chainID: "4"
+    ETHERSCAN_EXPLORER_URL: "https://rinkeby.etherscan.io/"
+    ETHERSCAN_API_URL: "https://api-rinkeby.etherscan.io"
+    ETHERSCAN_API_KEY: "HZRT7R3NQVR5QN2QP3DDFA7KZ98J9FH1X6"
+    BSCSCAN_EXPLORER_URL: "https://testnet.bscscan.com/"
+    BSCSCAN_API_URL: "https://api-testnet.bscscan.com"
+    BSCSCAN_API_KEY: "2FVGV9HMUSNR6QX4BS7IWY32H1UT416G2B"
+    WEBHOOK_CALL_BACK_BASE_URL: "https://test.cryptokara.com"
+    ROOT_UPLOAD_DIR: "coinIcons"
+    AWS_ACCESS_KEY: "AKIARR2QORR7DA2IQPU3"
+    AWS_SECRET_KEY: "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"
+    AWS_BUCKET: "cryptokara-storage"
+    AWS_REGION: "us-east-2"
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - npm install -g @nestjs/cli
+      - npm install
+  build:
+    commands:
+      - npm run build
+  post_build:
+    commands:
+      - cp -R node_modules/ dist/node_modules
+      - cp -R .ebextensions dist/.ebextensions
+      - cp Procfile dist/Procfile
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: no
+  base-directory: dist
