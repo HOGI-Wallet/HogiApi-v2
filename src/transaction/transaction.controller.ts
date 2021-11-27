@@ -52,6 +52,7 @@ export class TransactionController {
 
   @Post('monitorTx')
   async monitorTx(@Body() body: MonitorTransactionDto) {
+    console.log('monitorTx =>', body);
     return this.transactionService.createSentTxInDb(
       body.txHash,
       body.coinSymbol,
