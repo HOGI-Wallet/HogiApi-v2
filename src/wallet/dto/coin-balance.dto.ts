@@ -1,7 +1,15 @@
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
-class WalletInfo {
+export class WalletInfo {
   @IsString()
   @IsNotEmpty()
   coinSymbol: string;
@@ -9,13 +17,25 @@ class WalletInfo {
   @IsString()
   @IsNotEmpty()
   address: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isERC20: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isBEP20: boolean;
+
+  @IsString()
+  @IsOptional()
+  contractAddress: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  rate: number;
 }
 
 export class CoinBalanceDto {
-  @IsString()
-  @IsNotEmpty()
-  currencyCode: string;
-
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => WalletInfo)
