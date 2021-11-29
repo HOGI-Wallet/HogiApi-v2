@@ -33,6 +33,10 @@ export class WalletInfo {
   @IsNumber()
   @IsNotEmpty()
   rate: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  decimal: number;
 }
 
 export class CoinBalanceDto {

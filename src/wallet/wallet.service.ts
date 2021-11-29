@@ -273,7 +273,7 @@ export class WalletService {
           const balanceObj = await this.walletHelper.balanceInOtherCurrency(
             wallet.coinSymbol,
             wallet.rate ?? 0,
-            Web3.utils.fromWei(balance, 'ether') ?? '0',
+            `${Number(balance) / Math.pow(10, wallet.decimal ?? 18)}`,
           );
           balances.push({
             coinSymbol: wallet.coinSymbol,
@@ -289,7 +289,7 @@ export class WalletService {
           const balanceObj = await this.walletHelper.balanceInOtherCurrency(
             wallet.coinSymbol,
             wallet.rate ?? 0,
-            Web3.utils.fromWei(balance, 'ether') ?? '0',
+            `${Number(balance) / Math.pow(10, wallet.decimal ?? 18)}`,
           );
           balances.push({
             coinSymbol: wallet.coinSymbol,
