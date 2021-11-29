@@ -72,4 +72,12 @@ export class TransactionController {
     // console.log(`addmin btx in db! for toAddress: ${toAddress} =>`, body);
     return this.transactionService.submitTxBtc(body.tx, toAddress);
   }
+
+  /**
+   * [IMPORTANT] Only for maintenance
+  @Delete('invalid-timestamp')
+  async deleteInvalidTimestampTrxs() {
+    return this.transactionService.deleteInvalidTimestampTrxs();
+  }
+   */
 }

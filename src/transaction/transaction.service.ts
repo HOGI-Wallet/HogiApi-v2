@@ -252,4 +252,10 @@ export class TransactionService {
       this.transactionHelper.transformBCTx('btc', tx, toAddress),
     );
   }
+
+  async deleteInvalidTimestampTrxs() {
+    return await this.transactionModel.deleteMany({
+      timeStamp: 'Invalid Date',
+    });
+  }
 }
