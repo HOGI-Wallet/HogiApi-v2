@@ -231,53 +231,8 @@ export class WalletService {
   }
 
   async getMyWalletBalanceFromAllCoins(coinBalanceData: CoinBalanceDto) {
-    const coinRates = await this.ratesModel
-      .find({ currencyCode: coinBalanceData.currencyCode.toUpperCase() })
-      .lean();
-    let coinBalancesAdded = [];
-    for (const data of coinBalanceData.walletsInfo) {
-      const ratesInfo = await coinRates.find(
-        (coin) => coin.coinSymbol === data.coinSymbol,
-      );
-      let walletInfo;
-      if (data.coinSymbol === 'btc' || data.coinSymbol === 'doge') {
-        const history = await this.blockcypherService.getHistory(
-          data.coinSymbol,
-          data.address,
-        );
-        const balance = String(history?.balance / Math.pow(10, 8));
-
-        /**
-         * update transactions history
-         */
-        this.updateTxHistory(history?.txs, data.coinSymbol, data.address);
-        /**
-         * update balance
-         */
-        await this.walletModel.findOneAndUpdate(
-          { address: data.address, coinSymbol: data.coinSymbol },
-          { balance },
-        );
-        walletInfo = {
-          balance,
-        };
-      } else {
-        walletInfo = await this.walletModel
-          .findOne({ address: data.address, coinSymbol: data.coinSymbol })
-          .lean();
-      }
-
-      const balance = await this.walletHelper.balanceInOtherCurrency(
-        data.coinSymbol,
-        ratesInfo?.rate ?? 0,
-        walletInfo?.balance ?? '0',
-      );
-      coinBalancesAdded.push({
-        coinSymbol: data.coinSymbol,
-        address: data.address,
-        ...balance,
-      });
-    }
-    return coinBalancesAdded;
+    return {
+      gotRequest: true,
+    };
   }
 }
