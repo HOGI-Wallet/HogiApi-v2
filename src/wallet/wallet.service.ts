@@ -16,6 +16,8 @@ import {
   TransactionsDocument,
   TransactionsEntity,
 } from '../entities/transactions.entity';
+import balanceAbi from './contants/abi.constant';
+import Web3 from 'web3';
 
 @Injectable()
 export class WalletService {
@@ -231,8 +233,90 @@ export class WalletService {
   }
 
   async getMyWalletBalanceFromAllCoins(coinBalanceData: CoinBalanceDto) {
-    return {
-      gotRequest: true,
-    };
+    try {
+      let balances = [];
+      for (let wallet of coinBalanceData.walletsInfo) {
+        if (wallet.coinSymbol === 'eth') {
+          const balance = await this.walletHelper.getEthBalanceRpc(
+            wallet.address,
+          );
+          const balanceObj = await this.walletHelper.balanceInOtherCurrency(
+            wallet.coinSymbol,
+            wallet.rate ?? 0,
+            Web3.utils.fromWei(balance, 'ether') ?? '0',
+          );
+          balances.push({
+            coinSymbol: wallet.coinSymbol,
+            address: wallet.address,
+            ...balanceObj,
+          });
+        } else if (wallet.coinSymbol === 'bnb') {
+          const balance = await this.walletHelper.getBscBalanceRpc(
+            wallet.address,
+          );
+          const balanceObj = await this.walletHelper.balanceInOtherCurrency(
+            wallet.coinSymbol,
+            wallet.rate ?? 0,
+            Web3.utils.fromWei(balance, 'ether') ?? '0',
+          );
+          balances.push({
+            coinSymbol: wallet.coinSymbol,
+            address: wallet.address,
+            ...balanceObj,
+          });
+        } else if (wallet.isERC20) {
+          const balance = await this.walletHelper.getERC20BalanceRpc(
+            balanceAbi,
+            wallet.contractAddress,
+            wallet.address,
+          );
+          const balanceObj = await this.walletHelper.balanceInOtherCurrency(
+            wallet.coinSymbol,
+            wallet.rate ?? 0,
+            Web3.utils.fromWei(balance, 'ether') ?? '0',
+          );
+          balances.push({
+            coinSymbol: wallet.coinSymbol,
+            address: wallet.address,
+            ...balanceObj,
+          });
+        } else if (wallet.isBEP20) {
+          const balance = await this.walletHelper.getBEP20BalanceRpc(
+            balanceAbi,
+            wallet.contractAddress,
+            wallet.address,
+          );
+          const balanceObj = await this.walletHelper.balanceInOtherCurrency(
+            wallet.coinSymbol,
+            wallet.rate ?? 0,
+            Web3.utils.fromWei(balance, 'ether') ?? '0',
+          );
+          balances.push({
+            coinSymbol: wallet.coinSymbol,
+            address: wallet.address,
+            ...balanceObj,
+          });
+        } else {
+          const res = await this.blockcypherService.getBalance(
+            wallet.coinSymbol,
+            wallet.address,
+          );
+          const balance = String(res?.balance / Math.pow(10, 8));
+          const balanceObj = await this.walletHelper.balanceInOtherCurrency(
+            wallet.coinSymbol,
+            wallet.rate ?? 0,
+            balance ?? '0',
+          );
+          balances.push({
+            coinSymbol: wallet.coinSymbol,
+            address: wallet.address,
+            ...balanceObj,
+          });
+        }
+      }
+      return balances;
+    } catch (err) {
+      throw err;
+    }
   }
 }
