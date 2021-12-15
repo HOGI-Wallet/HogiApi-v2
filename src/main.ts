@@ -56,9 +56,8 @@ async function bootstrap() {
     region: configService.awsRegion,
   });
 
-  await app.listen(
-    configService.port,
-    () => `server started on ${configService.port}`,
-  );
+  await app.listen(configService.port, () => {
+    console.log(`App server started on ${configService.port}.`);
+  });
 }
 bootstrap();
