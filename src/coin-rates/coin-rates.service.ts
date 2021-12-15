@@ -205,7 +205,7 @@ export class CoinRatesService {
     }
 
     // send updated data on sockets
-    // this.socketService.emit({ message: 'coin data updated!' }, 'coin-data');
+    this.socketService.emit({ message: 'coin data updated!' }, 'coin-data');
     return;
   }
 
@@ -307,7 +307,7 @@ export class CoinRatesService {
     return;
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async updateNetworkFee(_coins?: CoinEntity[]) {
     console.log('started update network fee');
     let coins;
@@ -341,7 +341,7 @@ export class CoinRatesService {
     }
 
     // send updated data on sockets
-    this.socketService.emit({ message: 'coin data updated!' }, 'coin-data');
+    // this.socketService.emit({ message: 'coin data updated!' }, 'coin-data');
   }
 
   async getNetworkFee(coin: CoinEntity) {
