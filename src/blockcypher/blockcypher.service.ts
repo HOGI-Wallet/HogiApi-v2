@@ -216,7 +216,10 @@ export class BlockcypherService {
   ): Promise<IBalanceEndPointResponse> {
     try {
       return await this.get(
-        BlockcypherService.buildApiUrl(coinSymbol, `addrs/${address}/balance`),
+        BlockcypherService.buildApiUrl(
+          coinSymbol,
+          `addrs/${address}/balance?token=${this.config.blockCypherApiToken}`,
+        ),
         'getBalance',
       );
     } catch (e) {

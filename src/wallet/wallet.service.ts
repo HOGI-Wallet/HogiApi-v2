@@ -314,6 +314,7 @@ export class WalletService {
           });
         }
       }
+      console.log(balances);
       return balances;
     } catch (err) {
       throw err;

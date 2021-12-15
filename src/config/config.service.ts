@@ -101,6 +101,10 @@ export class ConfigService {
     return this.envConfig.BLOCKCYPHER_API_VERSION;
   }
 
+  get blockCypherApiToken(): string {
+    return this.envConfig.BLOCKCYPHER_API_TOKEN;
+  }
+
   get infuraNetwork(): string {
     return this.envConfig.INFURA_NETWORK;
   }
