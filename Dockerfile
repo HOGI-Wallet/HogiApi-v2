@@ -17,7 +17,7 @@ COPY --from=build /usr/app/package.json  /Cryptokara/package.json
 COPY --from=build /usr/app/yarn.lock /Cryptokara/yarn.lock
 COPY --from=build /usr/app/tsconfig.build.json  /Cryptokara/tsconfig.build.json
 
-COPY --from=build /usr/app/dist /weicrypto-legal/dist
+COPY --from=build /usr/app/dist /Cryptokara/dist
 
 COPY .env  ./
 
