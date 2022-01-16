@@ -1,25 +1,26 @@
-FROM node:12.14.1-alpine as build-deps
-WORKDIR /usr/src/app
+FROM node:14 as build
+
+WORKDIR /usr/app
 COPY package.json yarn.lock ./
-RUN yarn
-COPY . ./
-RUN yarn build
+ADD . ./
 
-FROM node:12-slim
+RUN yarn && yarn build
 
-WORKDIR /app
+FROM node:14
 
-ENV NODE_ENV=production
-COPY --from=build-deps /usr/src/app/package.json /app/package.json
+WORKDIR /Cryptokara
 
-COPY --from=build-deps /usr/src/app/yarn.lock /app/yarn.lock
-COPY --from=build-deps /usr/src/app/tsconfig.build.json /app/tsconfig.build.json
 
-COPY --from=build-deps /usr/src/app/dist /app/dist
+COPY --from=build /usr/app/node_modules /Cryptokara/node_modules
 
-COPY --from=build-deps usr/src/app/node_modules /app/node_modules
-COPY .env /app/.env
+COPY --from=build /usr/app/package.json  /Cryptokara/package.json
+COPY --from=build /usr/app/yarn.lock /Cryptokara/yarn.lock
+COPY --from=build /usr/app/tsconfig.build.json  /Cryptokara/tsconfig.build.json
+
+COPY --from=build /usr/app/dist /weicrypto-legal/dist
+
+COPY .env  ./
 
 EXPOSE 8080
 
-CMD ["yarn", "start"]
+CMD ["yarn", "start"] 
