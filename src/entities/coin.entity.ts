@@ -21,7 +21,7 @@ export class CoinEntity {
   @Prop({ type: [FixedRateHistorySchema] })
   fixedRateHistory?: FixedRateHistoryEntity[];
 
-  @Prop({ required: true })
+  @Prop({ required: true , unique: false })
   coinSymbol: string;
 
   @Prop({ default: 0 })
