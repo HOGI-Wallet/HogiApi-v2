@@ -174,11 +174,13 @@ export class WalletHelper {
 
   getCoinBlockchain(coin: CoinEntity) {
     let coinType;
+    if (coin.coinSymbol === 'trx') coinType = 'trx';
     if (coin.coinSymbol == 'xlm') coinType = 'xlm';
     else if (coin.coinSymbol === 'eth') coinType = 'isEth';
     else if (coin.coinSymbol === 'bnb') coinType = 'isBnb';
     else if (coin.isErc20) coinType = 'isERC20';
     else if (coin.isBep20) coinType = 'isBEP20';
+    else if (coin.isTrc20) coinType = 'isTrc20';
     else coinType = 'btcLike';
     return coinType;
   }

@@ -21,7 +21,7 @@ export class CoinEntity {
   @Prop({ type: [FixedRateHistorySchema] })
   fixedRateHistory?: FixedRateHistoryEntity[];
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   coinSymbol: string;
 
   @Prop({ default: 0 })
@@ -53,6 +53,9 @@ export class CoinEntity {
 
   @Prop({ Type: Boolean, default: false })
   isBep20?: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  isTrc20?: boolean;
 
   @Prop()
   contractAddress?: string;
