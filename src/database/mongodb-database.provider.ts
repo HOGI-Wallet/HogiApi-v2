@@ -8,7 +8,7 @@ export const MongodbDatabaseProvider = [
     inject: [ConfigService],
     useFactory: async (configService: ConfigService) => ({
       uri: configService.mongoUri,
-      useCreateIndex: false,
+      useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
