@@ -34,9 +34,9 @@ resource "aws_eks_node_group" "private-nodes" {
   node_group_name = "private-nodes"
   node_role_arn   = aws_iam_role.nodes.arn
   # Kubernetes version
-  version = "1.21"
+  version = "1.20"
 
-   subnet_ids = [
+  subnet_ids = [
     aws_subnet.private_sn1.id,
     aws_subnet.private_sn2.id
   ]

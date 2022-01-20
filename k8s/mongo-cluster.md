@@ -64,3 +64,4 @@ kubectl get all
 ```
 kubectl exec -it mongodb-0 mongo
 ```
+helm install mongodb --values mongoes.yml bitnami/mongodb
