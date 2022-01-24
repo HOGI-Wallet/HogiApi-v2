@@ -102,8 +102,8 @@ export class CoinRatesService {
         try {
           if (!coin.isFixedRate) {
             /** get market data */
-            let marketData;
-            marketData = _marketData.find(
+
+            const marketData = _marketData.find(
               (_data) =>
                 _data.id === coin.coingeckoId &&
                 _data.currency === currency.code,

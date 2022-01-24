@@ -12,4 +12,7 @@ export class CreatePublicinfoDto {
   @IsString()
   @IsNotEmpty()
   hdPath: string;
+
+  @IsString()
+  coinName?: string;
 }
