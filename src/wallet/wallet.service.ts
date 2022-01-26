@@ -160,7 +160,7 @@ export class WalletService {
     const coinRates = await this.ratesModel
       .find({ currencyCode: 'USD' })
       .lean();
-    let publicInfoDataAdded = [];
+    const publicInfoDataAdded = [];
     for (const data of publicinfoData) {
       await this.addPublicInfo(data);
       const ratesInfo = await coinRates.find(
@@ -177,6 +177,7 @@ export class WalletService {
       publicInfoDataAdded.push({
         coinSymbol: data.coinSymbol,
         address: data.address,
+        coinName: data.coinName,
         chart_data: {
           ...ratesInfo,
         },
@@ -234,8 +235,8 @@ export class WalletService {
 
   async getMyWalletBalanceFromAllCoins(coinBalanceData: CoinBalanceDto) {
     try {
-      let balances = [];
-      for (let wallet of coinBalanceData.walletsInfo) {
+      const balances = [];
+      for (const wallet of coinBalanceData.walletsInfo) {
         if (wallet.coinSymbol === 'eth') {
           const balance = await this.walletHelper.getEthBalanceRpc(
             wallet.address,
