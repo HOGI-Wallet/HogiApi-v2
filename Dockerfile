@@ -1,4 +1,4 @@
-FROM node:14 as build
+FROM node:16-alpine3.14 as build
 
 WORKDIR /usr/app
 COPY package.json yarn.lock ./
@@ -6,18 +6,12 @@ ADD . ./
 
 RUN yarn && yarn build
 
-FROM node:14
+FROM node:14-slim
 
-WORKDIR /Cryptokara
+WORKDIR /cryptokara
 
 
-COPY --from=build /usr/app/node_modules /Cryptokara/node_modules
-
-COPY --from=build /usr/app/package.json  /Cryptokara/package.json
-COPY --from=build /usr/app/yarn.lock /Cryptokara/yarn.lock
-COPY --from=build /usr/app/tsconfig.build.json  /Cryptokara/tsconfig.build.json
-
-COPY --from=build /usr/app/dist /Cryptokara/dist
+COPY --from=build /usr/app/node_modules package.json yarn.lock tsconfig.build.json  dist /cryptokara/
 
 COPY .env  ./
 
