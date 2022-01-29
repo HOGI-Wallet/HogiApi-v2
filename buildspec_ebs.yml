@@ -1,47 +1,4 @@
 version: 0.2
-env:
-  variables:
-    PORT: 8080
-    NODE_ENV: development
-    # database
-    MONGO_URI: mongodb://localhost:27017/icovest
-
-    # jwt
-    JWT_SECRET: $JWT_SECRET
-    JWT_EXPIRY_TIME: 1d
-
-    # 2fa
-    TWO_FACTOR_AUTHENTICATION_APP_NAME: iCovest
-
-    # blockcypher
-    BLOCKCYPHER_URL: https://api.blockcypher.com
-    BLOCKCYPHER_API_VERSION: v1
-    BLOCKCYPHER_API_TOKEN: $BLOCKCYPHER_API_TOKEN
-    BLOCKCYPHER_EXPLORER: https://live.blockcypher.com
-
-    # moralis
-    MORALIS_APP_ID: 'HPB3TuLltpE3Y5reGGYW6PTDDVgqB8T8CgmfM6pe'
-    MORALIS_SERVER_URL: 'https://gbponggmjluf.grandmoralis.com:2053/server'
-    # binance rpc
-    BSC_RPC_URL: $BSC_RPC_URL
-
-    # infura
-    ETH_RPC_URL: https://rinkeby.infura.io/v3/8dfe6343959248cfaee3c88eb2fc6cb6
-    ETH_WS_URL: wss://rinkeby.infura.io/ws/v3/8dfe6343959248cfaee3c88eb2fc6cb6
-
-    # etherscan
-    ETH_EXPLORER: https://rinkeby.etherscan.io
-
-    # bscscan
-    BSC_EXPLORER: https://testnet.bscscan.com
-    # square
-    SQUARE_ACCESS_TOKEN: EAAAEJBFRh5mwrIKsSuEWVdLve2z2V_51ICIg5h4AhqSUTKJXAslHHWsSR9NKnlp
-
-    # chain ids
-    ETH_CHAIN: rinkeby
-    ETH_CHAIN_ID: 4
-    BSC_CHAIN: tesntnet
-    BSC_CHAIN_ID: 97
 phases:
   install:
     runtime-versions:
@@ -55,7 +12,6 @@ phases:
   post_build:
     commands:
       - cp -R node_modules/ dist/node_modules
-      - cp -R .ebextensions dist/.ebextensions
       - cp Procfile dist/Procfile
 artifacts:
   files:
